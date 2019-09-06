@@ -2,6 +2,7 @@ import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/screens/signup.dart';
 import 'package:attendance_teacher/services/firestorecrud.dart';
 import 'package:flutter/material.dart';
+import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 
 class Login extends StatefulWidget {
@@ -15,14 +16,11 @@ class _LoginState extends State<Login> {
 
   Teacher teacher = Teacher.blank();
   String inputPass="";
-  bool isLoading=false;
+  bool _isLoading=false;
 
 
   @override
   Widget build(BuildContext context) {
-
-    Teacher incoming = Teacher.blank();
-
 
     return Scaffold(
       appBar: AppBar(
@@ -73,7 +71,7 @@ class _LoginState extends State<Login> {
                 Padding(
                   padding: EdgeInsets.all(10.0),
                   child: RaisedButton(
-                      child: isLoading?Loading():Text('Login'),
+                      child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Login'),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
@@ -82,12 +80,12 @@ class _LoginState extends State<Login> {
                         if (_loginForm.currentState.validate()) {
                           _loginForm.currentState.save();
                           setState(() {
-                            isLoading=true;
+                            _isLoading=true;
                           });
-                          FirestoreCRUD.login(context, incoming, teacher, inputPass).then((bool b){
-                            print("See b is printed here  "+b.toString());
+                          FirestoreCRUD.login(context, teacher, inputPass).then((bool value){
+                            print("See b is printed here  "+value.toString());
                             setState(() {
-                              isLoading=b;
+                              _isLoading=value;
                             });
                           });
                         }
@@ -104,7 +102,7 @@ class _LoginState extends State<Login> {
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     color: Colors.white,
-                    onPressed: () {
+                    onPressed: _isLoading?null:() {
                       Navigator.push(context, MaterialPageRoute(builder: (context) {
                         return SignUp();
                       }));

@@ -2,7 +2,6 @@ import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class Dashboard extends StatefulWidget {
 
@@ -86,7 +85,7 @@ class _DashboardState extends State<Dashboard> {
         onPressed: () {
 
         },
-        tooltip: 'Join New Class',
+        tooltip: 'Create new class',
         backgroundColor: Colors.blueAccent,
       ),
     );

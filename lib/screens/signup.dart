@@ -1,10 +1,14 @@
 import 'dart:io';
 import 'package:attendance_teacher/classes/teacher.dart';
+import 'package:attendance_teacher/services/firestorecrud.dart';
 import 'package:attendance_teacher/services/password.dart';
+import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:loading/loading.dart';
+import 'package:loading/indicator/ball_pulse_indicator.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -19,6 +23,8 @@ class _SignUpState extends State<SignUp> {
 
   Teacher teacher = Teacher.blank();
   File _image;
+
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +55,7 @@ class _SignUpState extends State<SignUp> {
                                   child: (_image!=null)?
                                   Image.file(_image,fit: BoxFit.fill):
                                   Image.network(
-                                    "https://www.google.co.in/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+                                    "https://d2x5ku95bkycr3.cloudfront.net/App_Themes/Common/images/profile/0_200.png",
                                     fit: BoxFit.fill,
                                   ),
 
@@ -65,7 +71,7 @@ class _SignUpState extends State<SignUp> {
                                 Icons.edit,
                                 size: 30.0,
                               ),
-                              onPressed: () {
+                              onPressed: _isLoading?null:() {
                                 getImage();
                               },
                             ),
@@ -189,34 +195,39 @@ class _SignUpState extends State<SignUp> {
                               ),
                             ),
                             RaisedButton(
-                              child: Text('Submit'),
+                              child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Submit'),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30.0)
                               ),
                               onPressed: () {
-                                setState(() {
-                                  if(_signUpForm.currentState.validate() ) {
+                                  if(_image!=null  && _signUpForm.currentState.validate() && _isLoading==false) {
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
                                     _signUpForm.currentState.save();
                                     uploadPic(context);
 
-//                        Fluttertoast.showToast(
-//                            msg: student.name+' '+student.regNo+' '+student.pass+' '
-//                                +student.father+' '+student.gender+' '+student.category+' '
-//                                +student.dob+' '+student.email+' '+student.mobile,
-//                            toastLength: Toast.LENGTH_SHORT,
-//                            gravity: ToastGravity.CENTER,
-//                            timeInSecForIos: 1,
-//                            backgroundColor: Colors.red,
-//                            textColor: Colors.white,
-//                            fontSize: 16.0
-//                        );
-
-                                    Firestore.instance.collection('teach').add(teacher.toMap());
-                                    Navigator.of(context).pop();
+                                    //Method made signUp if new user
+                                    FirestoreCRUD.signUp(teacher,_image).then((bool b){
+                                      if(b==true){
+                                        toast('Registered successfully');
+                                        Navigator.of(context).pop();
+                                      }
+                                      else
+                                        setState(() {
+                                          _isLoading = false;
+                                        });
+                                    });
                                   }
-                                });
-                              },
-                            ),
+                                  else if(_image==null){
+                                    toast('Select an image');
+                                  }
+                                  else if(_isLoading){
+                                    toast("Please wait");
+                                  }
+
+                              }
+                                ),
                             Expanded(
                               child: Container(
                                 width: 50.0,
