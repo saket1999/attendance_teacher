@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:attendance_teacher/classes/teacher.dart';
+import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/screens/dashboard.dart';
 import 'package:attendance_teacher/services/password.dart';
 import 'package:attendance_teacher/services/toast.dart';
@@ -58,6 +59,20 @@ class FirestoreCRUD{
 		teacher.pass=await compute(Password.getHash,teacher.pass);
 		await uploadPic(teacher,_image);
 		await Firestore.instance.collection('stud').add(teacher.toMap());
+		return true;
+	}
+	
+	static Future<bool> createNewClass(Teaching subject) async {
+		int length = 0;
+		
+		await Firestore.instance.collection('teach').document(subject.teacherDocumentId).collection('subject').where('subjectId', isEqualTo: subject.subjectId).where('className', isEqualTo: subject.className).getDocuments().then((QuerySnapshot docs) {
+			length=docs.documents.length;
+		});
+		if(length > 0) {
+			toast('Class already exists.');
+			return false;
+		}
+		await Firestore.instance.collection('teach').document(subject.teacherDocumentId).collection('subject').add(subject.toMap());
 		return true;
 	}
 

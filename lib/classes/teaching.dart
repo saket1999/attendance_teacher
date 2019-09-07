@@ -5,6 +5,13 @@ class Teaching {
 	String _subjectName;
 	String _documentId;
 	String _teacherDocumentId;
+	String _joiningCode;
+
+	String get joiningCode => _joiningCode;
+
+	set joiningCode(String value) {
+		_joiningCode = value;
+	}
 
 	Teaching.blank();
 
@@ -38,6 +45,7 @@ class Teaching {
 		map['subjectId'] = _subjectId;
 		map['className'] = _className;
 		map['subjectName'] = _subjectName;
+		map['joiningCode'] = _joiningCode;
 		return map;
 	}
 

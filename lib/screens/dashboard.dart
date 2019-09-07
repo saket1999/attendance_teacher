@@ -1,5 +1,6 @@
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
+import 'package:attendance_teacher/screens/createclass.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -83,7 +84,9 @@ class _DashboardState extends State<Dashboard> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-
+			Navigator.push(context, MaterialPageRoute(builder: (context) {
+				return CreateClass(_teacher);
+			}));
         },
         tooltip: 'Create new class',
         backgroundColor: Colors.blueAccent,
