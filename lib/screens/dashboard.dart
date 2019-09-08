@@ -1,7 +1,9 @@
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/screens/createclass.dart';
+import 'package:attendance_teacher/screens/subjectlist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatefulWidget {
@@ -18,7 +20,14 @@ class _DashboardState extends State<Dashboard> {
 
   Teacher _teacher;
 
+  String _url;
+
   _DashboardState(this._teacher);
+
+  void initState() {
+    super.initState();
+    getURL();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +49,7 @@ class _DashboardState extends State<Dashboard> {
                         title: Text('Dashboard'),
                         background: Card(
                           child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
                                 Align(
                                   alignment: Alignment.center,
@@ -51,8 +60,8 @@ class _DashboardState extends State<Dashboard> {
                                       child: SizedBox(
                                         width: 100.0,
                                         height: 100.0,
-                                        child: Image.network(
-                                          "https://www.google.co.in/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+                                        child: _url!=null?Image.network(_url):Image.network(
+                                          "https://d2x5ku95bkycr3.cloudfront.net/App_Themes/Common/images/profile/0_200.png",
                                           fit: BoxFit.fill,
                                         ),
                                       ),
@@ -60,13 +69,28 @@ class _DashboardState extends State<Dashboard> {
                                   ),
 
                                 ),
-                                Container(
-                                  child: Card(
-                                    child: Text(
-                                      _teacher.name,
-                                      textScaleFactor: 1.5,
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                      child: Text(
+                                        _teacher.name,
+                                        textScaleFactor: 1.5,
+                                      ),
                                     ),
-                                  ),
+                                    Container(
+                                      child: Text(
+                                        _teacher.teacherId,
+                                        textScaleFactor: 1.5,
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        _teacher.mobile,
+                                        textScaleFactor: 1.5,
+                                      ),
+                                    ),
+                                  ],
                                 )
                               ]
 
@@ -114,23 +138,13 @@ class _DashboardState extends State<Dashboard> {
         subject.documentId = doc.documentID;
         subject.teacherDocumentId = _teacher.documentId;
         return GestureDetector(
-//          onTap: () {
-//
-//            Fluttertoast.showToast(
-//                msg: subject.subjectId+' '+subject.teacherId+ ' '+ subject.subjectName+ ' '+ subject.documentId,
-//                toastLength: Toast.LENGTH_SHORT,
-//                gravity: ToastGravity.CENTER,
-//                timeInSecForIos: 1,
-//                backgroundColor: Colors.red,
-//                textColor: Colors.white,
-//                fontSize: 16.0
-//            );
-//
-//            Navigator.push(context, MaterialPageRoute(builder: (context) {
-//              return History(subject);
-//            }));
-//
-//          },
+          onTap: () {
+
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return SubjectList(subject);
+            }));
+
+          },
           child: Card(
             child: ListTile(
               title: Text(subject.subjectId),
@@ -141,16 +155,19 @@ class _DashboardState extends State<Dashboard> {
       }
     });
 
-//		List<ListTile> temp = snapshot.data.documents
-//			.map((doc) {
-//				ListTile(
-//					title: Text(doc.data['subjectId']),
-//					subtitle: Text(doc.data['teacherId']),
-//			);
-//				debugPrint(doc.data['subjectId']);
-//				debugPrint(doc.documentID);
-//			})
-//			.toList();
+//
     return listView;
+  }
+
+  void getURL() async{
+    String url;
+    StorageReference ref = FirebaseStorage.instance.ref().child(_teacher.teacherId);
+    url = (await ref.getDownloadURL()).toString();
+    print(url);
+
+    setState(() {
+      _url = url;
+    });
+
   }
 }

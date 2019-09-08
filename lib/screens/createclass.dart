@@ -23,6 +23,7 @@ class _CreateClassState extends State<CreateClass> {
 
 	_CreateClassState(this._teacher);
 
+
 	var _createForm = GlobalKey<FormState>();
 
 	Teaching _subject = Teaching.blank();
@@ -83,14 +84,14 @@ class _CreateClassState extends State<CreateClass> {
 								padding: EdgeInsets.all(10.0),
 								child: TextFormField(
 									onSaved: (value) {
-										_subject.className = value;
+										_subject.classId = value;
 									},
 									validator: (String value) {
-										if (value.length != 6)
-											return "Length should be 6";
+										if (value.length != 5)
+											return "Length should be 5";
 									},
 									decoration: InputDecoration(
-										labelText: "Class Name",
+										labelText: "Class Id",
 										errorStyle: TextStyle(color: Colors.yellow),
 										border: OutlineInputBorder(
 											borderRadius: BorderRadius.circular(5.0))),
@@ -109,7 +110,7 @@ class _CreateClassState extends State<CreateClass> {
 										if (_createForm.currentState.validate()) {
 											_createForm.currentState.save();
 											_subject.teacherDocumentId = _teacher.documentId;
-											_subject.joiningCode = _subject.subjectId+_subject.className;
+											_subject.joiningCode = _subject.subjectId+_subject.classId;
 											setState(() {
 												_isLoading=true;
 											});
@@ -131,7 +132,6 @@ class _CreateClassState extends State<CreateClass> {
 					),
 				),
 			),
-
 		),
 	);
   }

@@ -1,7 +1,7 @@
 
 class Teaching {
 	String _subjectId;
-	String _className;
+	String _classId;
 	String _subjectName;
 	String _documentId;
 	String _teacherDocumentId;
@@ -21,10 +21,10 @@ class Teaching {
 		_subjectName = value;
 	}
 
-	String get className => _className;
+	String get classId => _classId;
 
-	set className(String value) {
-		_className = value;
+	set classId(String value) {
+		_classId = value;
 	}
 
 	String get subjectId => _subjectId;
@@ -40,10 +40,16 @@ class Teaching {
 		_documentId = value;
 	}
 
+	String get teacherDocumentId => _teacherDocumentId;
+
+	set teacherDocumentId(String value) {
+		_teacherDocumentId = value;
+	}
+
 	Map<String, String> toMap() {
 		var map = Map<String, String>();
 		map['subjectId'] = _subjectId;
-		map['className'] = _className;
+		map['classId'] = _classId;
 		map['subjectName'] = _subjectName;
 		map['joiningCode'] = _joiningCode;
 		return map;
@@ -51,14 +57,9 @@ class Teaching {
 
 	Teaching.fromMapObject(var doc) {
 		this._subjectId = doc.data['subjectId'];
-		this._className = doc.data['className'];
+		this._classId = doc.data['classId'];
 		this._subjectName = doc.data['subjectName'];
 	}
 
-	String get teacherDocumentId => _teacherDocumentId;
-
-	set teacherDocumentId(String value) {
-		_teacherDocumentId = value;
-	}
 
 }
