@@ -59,7 +59,7 @@ class FirestoreCRUD{
 		}
 		teacher.pass=await compute(Password.getHash,teacher.pass);
 		await uploadPic(teacher,_image);
-		await Firestore.instance.collection('stud').add(teacher.toMap());
+		await Firestore.instance.collection('teach').add(teacher.toMap());
 		return true;
 	}
 	
