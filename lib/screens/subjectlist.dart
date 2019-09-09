@@ -1,3 +1,4 @@
+import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/classes/timings.dart';
 import 'package:attendance_teacher/screens/createtiming.dart';
@@ -8,19 +9,20 @@ import 'package:flutter/material.dart';
 
 class SubjectList extends StatefulWidget {
 
+	Teacher _teacher;
 	Teaching _teaching;
-
-	SubjectList(this._teaching);
+	SubjectList(this._teacher, this._teaching);
 
 	@override
-  _SubjectListState createState() => _SubjectListState(_teaching);
+  _SubjectListState createState() => _SubjectListState(_teacher, _teaching);
 }
 
 class _SubjectListState extends State<SubjectList> {
 
+	Teacher _teacher;
 	Teaching _teaching;
 
-	_SubjectListState(this._teaching);
+	_SubjectListState(this._teacher, this._teaching);
 
 	String barcode = "";
 
@@ -62,7 +64,7 @@ class _SubjectListState extends State<SubjectList> {
 				return GestureDetector(
 					onTap: () {
 						Navigator.push(context, MaterialPageRoute(builder: (context) {
-							return QrScanner(_teaching, timings);
+							return QrScanner(_teacher, _teaching, timings);
 						}));
 					},
 					child: Card(

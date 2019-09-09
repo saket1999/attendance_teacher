@@ -141,7 +141,7 @@ class _DashboardState extends State<Dashboard> {
           onTap: () {
 
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return SubjectList(subject);
+              return SubjectList(_teacher, subject);
             }));
 
           },
