@@ -1,6 +1,8 @@
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/classes/timings.dart';
 import 'package:attendance_teacher/screens/createtiming.dart';
+import 'package:attendance_teacher/screens/qrscanner.dart';
+import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +21,8 @@ class _SubjectListState extends State<SubjectList> {
 	Teaching _teaching;
 
 	_SubjectListState(this._teaching);
+
+	String barcode = "";
 
 	@override
   Widget build(BuildContext context) {
@@ -55,14 +59,22 @@ class _SubjectListState extends State<SubjectList> {
 				var doc = snapshot.data.documents[index];
 				Timings timings = Timings.fromMapObject(doc);
 				timings.documentId = doc.documentID;
-				return Card(
-					child: ListTile(
-						title: Text(timings.day),
-						subtitle: Text(timings.start+' : '+timings.duration+' hours'),
-					),
+				return GestureDetector(
+					onTap: () {
+						Navigator.push(context, MaterialPageRoute(builder: (context) {
+							return QrScanner(_teaching, timings);
+						}));
+					},
+					child: Card(
+						child: ListTile(
+							title: Text(timings.day),
+							subtitle: Text(timings.start+' : '+timings.duration+' hours'),
+						),
+					)
 				);
 			}
 		});
 		return listView;
   }
+
 }

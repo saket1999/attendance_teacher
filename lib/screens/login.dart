@@ -1,6 +1,7 @@
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/screens/signup.dart';
 import 'package:attendance_teacher/services/firestorecrud.dart';
+import 'package:attendance_teacher/services/password.dart';
 import 'package:flutter/material.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
@@ -55,7 +56,7 @@ class _LoginState extends State<Login> {
                   child: TextFormField(
                     obscureText: true,
                     onSaved: (value) {
-                      inputPass = value;
+                      inputPass = Password.getHash(value);
                     },
                     validator: (String value) {
                       if (value.length < 6)
