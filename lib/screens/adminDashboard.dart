@@ -1,8 +1,10 @@
 import 'package:attendance_teacher/classes/student.dart';
 import 'package:attendance_teacher/classes/teacher.dart';
+import 'package:attendance_teacher/screens/allowprofilechange.dart';
+import 'package:attendance_teacher/screens/mailteachers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 
@@ -24,6 +26,50 @@ class AdminDashboard extends StatelessWidget{
     return DefaultTabController(
       length: _tabs.length,
       child: Scaffold(
+        drawer: Drawer(
+          child: ListView(
+            children: <Widget>[
+              DrawerHeader(
+                child: Icon(Icons.account_circle),
+                decoration: BoxDecoration(
+                  color: Colors.cyan,
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.email),
+                title: Text('Mail'),
+                subtitle: Text('All teachers will be sent the email'),
+                onTap: (){
+                  prefix0.Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return MailTeachers();
+                  }));
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.search),
+                title: Text('Allow profile change'),
+                subtitle: Text('All selected users will be allowed to update their profile'),
+                onTap: (){
+
+                  prefix0.Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return AllowProfileChange();
+                  }));
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.subject),
+                title: Text('Attendance Short List'),
+                subtitle: Text('See list of students with short attendance'),
+                onTap: (){
+
+                  prefix0.Navigator.pop(context);
+                },
+              ),
+            ],
+          )
+        ),
         appBar: AppBar(
           title: Text('Admin Dashboard'),
           backgroundColor: Colors.cyan,

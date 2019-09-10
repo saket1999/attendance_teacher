@@ -1,5 +1,3 @@
-import 'package:attendance_teacher/classes/teacher.dart';
-import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -7,21 +5,12 @@ import 'package:flutter_mailer/flutter_mailer.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 
-class MailClass extends StatefulWidget {
-
-  Teacher _teacher;
-  Teaching _teaching;
-
-  MailClass(this._teaching,this._teacher);
-
+class MailTeachers extends StatefulWidget {
   @override
-  _MailClassState createState() => _MailClassState(_teaching,_teacher);
+  _MailTeachersState createState() => _MailTeachersState();
 }
 
-class _MailClassState extends State<MailClass> {
-
-  Teacher _teacher;
-  Teaching _teaching;
+class _MailTeachersState extends State<MailTeachers> {
   var _mailForm = GlobalKey<FormState>();
   var subject;
   var body;
@@ -29,7 +18,7 @@ class _MailClassState extends State<MailClass> {
   bool _isLoading=true;
   bool _sendingMail=false;
 
-  _MailClassState(this._teaching,this._teacher);
+  _MailTeachersState();
 
   void initState() {
     super.initState();
@@ -134,9 +123,10 @@ class _MailClassState extends State<MailClass> {
     return;
   }
   Future<void> getRecipients() async {
-    QuerySnapshot docs=await Firestore.instance.collection('stud').where('classId',isEqualTo: _teaching.classId).getDocuments();
+    QuerySnapshot docs=await Firestore.instance.collection('teach').getDocuments();
+    toast(docs.documents.length.toString()+" teachers will be sent email");
     for(int i=0;i<docs.documents.length;i++)
-       recipients.add(docs.documents[i].data['email'].toString());
+      recipients.add(docs.documents[i].data['email'].toString());
     setState(() {
       _isLoading=false;
     });

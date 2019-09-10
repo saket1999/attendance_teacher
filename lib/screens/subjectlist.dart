@@ -57,7 +57,7 @@ class _SubjectListState extends State<SubjectList> {
   }
 
   getTimingsList(AsyncSnapshot<QuerySnapshot> snapshot) {
-		var listView = ListView.builder(itemBuilder: (context, index) {
+		var listView = ListView.builder(itemCount:snapshot.data.documents.length,itemBuilder: (context, index) {
 			if(index<snapshot.data.documents.length) {
 				var doc = snapshot.data.documents[index];
 				Timings timings = Timings.fromMapObject(doc);
@@ -92,8 +92,9 @@ class _SubjectListState extends State<SubjectList> {
 										title: Text('Edit Attendance'),
 										onTap: () {
 											Navigator.push(context, MaterialPageRoute(builder: (context) {
-												return EditAttendance();
+												return EditAttendance(_teacher, _teaching, timings);
 											}));
+
 										},
 									),
 									ListTile(
@@ -109,6 +110,7 @@ class _SubjectListState extends State<SubjectList> {
 				  ),
 				);
 			}
+			return Container();
 		});
 		return listView;
   }
