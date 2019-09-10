@@ -61,22 +61,76 @@ class _SubjectListState extends State<SubjectList> {
 				var doc = snapshot.data.documents[index];
 				Timings timings = Timings.fromMapObject(doc);
 				timings.documentId = doc.documentID;
-				return GestureDetector(
-					onTap: () {
-						Navigator.push(context, MaterialPageRoute(builder: (context) {
-							return QrScanner(_teacher, _teaching, timings);
-						}));
-					},
-					child: Card(
-						child: ListTile(
-							title: Text(timings.day),
-							subtitle: Text(timings.start+' : '+timings.duration+' hours'),
-						),
-					)
+				return Card(
+				  child: ExpansionTile(
+					  key: GlobalKey(),
+				  	title: ListTile(
+						title: Text(timings.day),
+						subtitle: Text(timings.start+' : '+timings.duration+' hours'),
+					),
+				  	children: <Widget>[
+				  		Card(
+							color: Colors.black12,
+							child: Column(
+								children: <Widget>[
+									ListTile(
+										title: Text('Take Attendance'),
+										onTap: () {
+											Navigator.push(context, MaterialPageRoute(builder: (context) {
+												return QrScanner(_teacher, _teaching, timings);
+											}));
+										},
+									),
+									ListTile(
+										title: Text('Bunk'),
+										onTap: () {
+											markAllAbsent(timings);
+										},
+									),
+									ListTile(
+										title: Text('Edit Attendance'),
+										onTap: () {
+
+										},
+									),
+									ListTile(
+										title: Text('Cancel Class'),
+										onTap: () {
+
+										},
+									)
+								],
+							),
+						)
+				  	],
+				  ),
 				);
 			}
 		});
 		return listView;
+  }
+
+  void markAllAbsent(Timings timings) async {
+	  var now = DateTime.now();
+	  var date = now.year.toString()+'-'+now.month.toString()+'-'+now.day.toString();
+	  var day = timings.day;
+	  var time = timings.start;
+
+	  Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(_teaching.documentId).collection('studentsEnrolled').getDocuments().then((snapshot) {
+		  for(int i=0; i<snapshot.documents.length; i++) {
+			  var id = snapshot.documents[i].data['docId'];
+			  Firestore.instance.collection('stud').document(id).collection('subject').where('subjectId', isEqualTo: _teaching.subjectId).where('teacherId', isEqualTo: _teacher.teacherId).getDocuments().then((snapshot) {
+				  if(snapshot.documents.length>0) {
+					  Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').where('date', isEqualTo: date).where('time', isEqualTo: time).getDocuments().then((check) {
+						  if(check.documents.length==0)
+							  Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').add({'date': date, 'day': day, 'time': time, 'outcome': 'A'});
+					  });
+
+				  }
+			  });
+		  }
+		  toast('Task Completed Successfully');
+	  });
   }
 
 }

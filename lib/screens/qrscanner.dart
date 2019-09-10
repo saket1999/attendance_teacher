@@ -44,9 +44,9 @@ class _QrScannerState extends State<QrScanner> {
 		super.initState();
 
 
-		var date = now.year.toString()+'-'+now.month.toString()+'-'+now.day.toString();
-		var day = timings.day;
-		var time = timings.start;
+		date = now.year.toString()+'-'+now.month.toString()+'-'+now.day.toString();
+		day = timings.day;
+		time = timings.start;
 
 		Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(teaching.documentId).collection('studentsEnrolled').getDocuments().then((snapshot) {
 			for(int i=0; i<snapshot.documents.length; i++) {
@@ -123,7 +123,6 @@ class _QrScannerState extends State<QrScanner> {
 	void confirmDialogue() async {
 		var _imageUrl = await FirebaseStorage.instance.ref().child(student['regNo']).getDownloadURL();
 		_imageUrl = _imageUrl.toString();
-		toast(_imageUrl);
 		showDialog(
 			barrierDismissible: false,
 			context: context,
@@ -230,7 +229,7 @@ class _QrScannerState extends State<QrScanner> {
 		var snapshot = await Firestore.instance.collection('stud').document(qrText).collection('subject').where('subjectId', isEqualTo: teaching.subjectId).where('teacherId', isEqualTo: _teacher.teacherId).getDocuments();
 		if(snapshot.documents.length>0) {
 			var docId = snapshot.documents[0].documentID;
-			Firestore.instance.collection('stud').document(qrText).collection('subject').document(docId).collection('attendance').where('day', isEqualTo: day).where('time', isEqualTo: time).getDocuments().then((snapshot) {
+			Firestore.instance.collection('stud').document(qrText).collection('subject').document(docId).collection('attendance').where('date', isEqualTo: date).where('day', isEqualTo: day).where('time', isEqualTo: time).getDocuments().then((snapshot) {
 				if(snapshot.documents.length==0)
 					Firestore.instance.collection('stud').document(qrText).collection('subject').document(docId).collection('attendance').add({'date': date, 'day': day, 'time': time,'outcome': outcome});
 				else {
