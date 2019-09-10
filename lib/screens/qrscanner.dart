@@ -36,6 +36,9 @@ class _QrScannerState extends State<QrScanner> {
 
 	bool _doScan = true;
 
+	int present = 0;
+	int total = 0;
+
 
 	var now = DateTime.now();
 	var date,day,time;
@@ -66,36 +69,37 @@ class _QrScannerState extends State<QrScanner> {
 
 	@override
 	Widget build(BuildContext context) {
-		return Scaffold(
-			body: Column(
-				children: <Widget>[
-					Expanded(
-						flex: 5,
-						child: QRView(
-							key: qrKey,
-							overlay: QrScannerOverlayShape(
-								borderRadius: 10.0,
-								borderColor: Colors.red,
-								borderLength: 30.0,
-								borderWidth: 10.0,
-								cutOutSize: 300.0
+		return WillPopScope(
+			child: Scaffold(
+				body: Column(
+					children: <Widget>[
+						Expanded(
+							flex: 5,
+							child: QRView(
+								key: qrKey,
+								overlay: QrScannerOverlayShape(
+									borderRadius: 10.0,
+									borderColor: Colors.red,
+									borderLength: 30.0,
+									borderWidth: 10.0,
+									cutOutSize: 300.0
+								),
+								onQRViewCreated: _onQRViewCreate,
 							),
-							onQRViewCreated: _onQRViewCreate,
 						),
-					),
-					Expanded(
-						child: Center(
-							child: Text(qrText),
+						Expanded(
+							child: Center(
+								child: Text(qrText),
+							),
 						),
-					),
-//				RaisedButton(
-//					child: Text('~'),
-//					onPressed: () {
-//						giffyDialogue();
-//					}
-//				)
-				],
+					],
+				),
 			),
+			onWillPop: () {
+//				Navigator.pop(context);
+				getAttendanceData();
+//				attendanceDialog();
+			},
 		);
 	}
 
@@ -118,6 +122,131 @@ class _QrScannerState extends State<QrScanner> {
 				}
 			});
 		});
+	}
+
+	void attendanceDialog(){
+		showDialog(
+			context: context,
+			builder: (_) {
+				return WillPopScope(
+					onWillPop: () {
+						Navigator.pop(context);
+						Navigator.pop(context);
+					},
+					child: Dialog(
+						shape: RoundedRectangleBorder(
+							borderRadius: BorderRadius.circular(12.0)
+						),
+						child: Container(
+							height: 300.0,
+							width: 300.0,
+							child: Column(
+								mainAxisAlignment: MainAxisAlignment.center,
+								children: <Widget>[
+									Card(
+										child: Row(
+											mainAxisAlignment: MainAxisAlignment.center,
+											children: <Widget>[
+												Text(
+													'Date',
+													textScaleFactor: 1.5,
+												),
+												Container(width: 10),
+												Text(
+													date,
+													textScaleFactor: 1.5,
+												)
+											],
+										),
+									),
+									Card(
+										child: Row(
+											mainAxisAlignment: MainAxisAlignment.center,
+											children: <Widget>[
+												Text(
+													'Day',
+													textScaleFactor: 1.5,
+												),
+												Container(width: 10),
+												Text(
+													day,
+													textScaleFactor: 1.5,
+												)
+											],
+										),
+									),
+									Card(
+										child: Row(
+											mainAxisAlignment: MainAxisAlignment.center,
+											children: <Widget>[
+												Text(
+													'Time',
+													textScaleFactor: 1.5,
+												),
+												Container(width: 10),
+												Text(
+													time,
+													textScaleFactor: 1.5,
+												)
+											],
+										),
+									),
+									Card(
+										child: Row(
+											mainAxisAlignment: MainAxisAlignment.center,
+											children: <Widget>[
+												Text(
+													'Total Strength',
+													textScaleFactor: 1.5,
+												),
+												Container(width: 10),
+												Text(
+													total.toString(),
+													textScaleFactor: 1.5,
+												)
+											],
+										),
+									),
+									Card(
+										child: Row(
+											mainAxisAlignment: MainAxisAlignment.center,
+											children: <Widget>[
+												Text(
+													'Present',
+													textScaleFactor: 1.5,
+												),
+												Container(width: 10),
+												Text(
+													present.toString(),
+													textScaleFactor: 1.5,
+												)
+											],
+										),
+									),
+									Card(
+										child: Row(
+											mainAxisAlignment: MainAxisAlignment.center,
+											children: <Widget>[
+												Text(
+													'Absent',
+													textScaleFactor: 1.5,
+												),
+												Container(width: 10),
+												Text(
+													(total-present).toString(),
+													textScaleFactor: 1.5,
+												)
+											],
+										),
+									),
+
+								],
+							),
+						),
+					),
+				);
+			}
+		);
 	}
 
 	void confirmDialogue() async {
@@ -229,5 +358,27 @@ class _QrScannerState extends State<QrScanner> {
 				}
 			});
 		}
+	}
+
+	void getAttendanceData() async {
+		var snapshot = await Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(teaching.documentId).collection('studentsEnrolled').getDocuments();
+		total = snapshot.documents.length;
+
+		for(int i=0; i<snapshot.documents.length; i++) {
+
+//			toast(snapshot.documents[i].data['docId']);
+			var subSnapshot = await Firestore.instance.collection('stud').document(snapshot.documents[i].data['docId']).collection('subject').where('subjectId', isEqualTo: teaching.subjectId).where('teacherId', isEqualTo: _teacher.teacherId).getDocuments();
+
+//			toast(subSnapshot.documents.length.toString());
+			if(subSnapshot.documents.length>0) {
+				var attenSnapshot = await Firestore.instance.collection('stud').document(snapshot.documents[i].data['docId']).collection('subject').document(subSnapshot.documents[0].documentID).collection('attendance').where('date', isEqualTo: date).where('day', isEqualTo: day).where('time', isEqualTo: time).getDocuments();
+
+//				toast(attenSnapshot.documents[0].data['outcome']);
+				if(attenSnapshot.documents.length>0 && attenSnapshot.documents[0].data['outcome'] == 'P')
+					present++;
+			}
+		}
+//		toast(present.toString());
+		attendanceDialog();
 	}
 }

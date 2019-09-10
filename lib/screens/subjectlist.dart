@@ -2,6 +2,7 @@ import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/classes/timings.dart';
 import 'package:attendance_teacher/screens/createtiming.dart';
+import 'package:attendance_teacher/screens/editattendance.dart';
 import 'package:attendance_teacher/screens/qrscanner.dart';
 import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -90,7 +91,9 @@ class _SubjectListState extends State<SubjectList> {
 									ListTile(
 										title: Text('Edit Attendance'),
 										onTap: () {
-
+											Navigator.push(context, MaterialPageRoute(builder: (context) {
+												return EditAttendance();
+											}));
 										},
 									),
 									ListTile(
