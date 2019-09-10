@@ -2,6 +2,7 @@ import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/classes/timings.dart';
 import 'package:attendance_teacher/screens/createtiming.dart';
+import 'package:attendance_teacher/screens/editattendance.dart';
 import 'package:attendance_teacher/screens/qrscanner.dart';
 import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -56,7 +57,7 @@ class _SubjectListState extends State<SubjectList> {
   }
 
   getTimingsList(AsyncSnapshot<QuerySnapshot> snapshot) {
-		var listView = ListView.builder(itemBuilder: (context, index) {
+		var listView = ListView.builder(itemCount:snapshot.data.documents.length,itemBuilder: (context, index) {
 			if(index<snapshot.data.documents.length) {
 				var doc = snapshot.data.documents[index];
 				Timings timings = Timings.fromMapObject(doc);
@@ -90,6 +91,9 @@ class _SubjectListState extends State<SubjectList> {
 									ListTile(
 										title: Text('Edit Attendance'),
 										onTap: () {
+											Navigator.push(context, MaterialPageRoute(builder: (context) {
+												return EditAttendance(_teacher, _teaching, timings);
+											}));
 
 										},
 									),
@@ -106,6 +110,7 @@ class _SubjectListState extends State<SubjectList> {
 				  ),
 				);
 			}
+			return Container();
 		});
 		return listView;
   }

@@ -1,5 +1,6 @@
 import 'package:attendance_teacher/screens/adminDashboard.dart';
 import 'package:attendance_teacher/screens/login.dart';
+import 'package:attendance_teacher/screens/mailteachers.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
