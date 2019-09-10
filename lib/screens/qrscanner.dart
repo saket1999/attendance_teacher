@@ -53,7 +53,7 @@ class _QrScannerState extends State<QrScanner> {
 				var id = snapshot.documents[i].data['docId'];
 				Firestore.instance.collection('stud').document(id).collection('subject').where('subjectId', isEqualTo: teaching.subjectId).where('teacherId', isEqualTo: _teacher.teacherId).getDocuments().then((snapshot) {
 					if(snapshot.documents.length>0) {
-						Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').where('date', isEqualTo: date).where('time', isEqualTo: time).getDocuments().then((check) {
+						Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').where('date', isEqualTo: date).where('time', isEqualTo: time).where('day',isEqualTo: day).getDocuments().then((check) {
 							if(check.documents.length==0)
 								Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').add({'date': date, 'day': day, 'time': time, 'outcome': 'A'});
 						});
@@ -212,14 +212,6 @@ class _QrScannerState extends State<QrScanner> {
 
 	void getData() async {
 		var snapshot = await Firestore.instance.collection('stud').document(qrText).get();
-//  	snapshot.then((doc) {
-//		student = doc.data;
-//		toast(student['regNo']);
-//		setState(() {
-//
-//		});
-//	});
-//  }
 		var doc = snapshot.data;
 		student = doc;
 		confirmDialogue();
