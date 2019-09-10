@@ -1,6 +1,7 @@
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/screens/createclass.dart';
+import 'package:attendance_teacher/screens/mailclass.dart';
 import 'package:attendance_teacher/screens/subjectlist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -131,7 +132,7 @@ class _DashboardState extends State<Dashboard> {
 
   getSubjectList(AsyncSnapshot<QuerySnapshot> snapshot) {
 
-    var listView = ListView.builder(itemBuilder: (context, index) {
+    var listView = ListView.builder(itemCount: snapshot.data.documents.length,itemBuilder: (context, index) {
       if(index<snapshot.data.documents.length) {
         var doc = snapshot.data.documents[index];
         Teaching subject = Teaching.fromMapObject(doc);
@@ -143,6 +144,9 @@ class _DashboardState extends State<Dashboard> {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return SubjectList(subject);
             }));
+//            Navigator.push(context, MaterialPageRoute(builder: (context) {
+//              return MailClass(subject,_teacher);
+//            }));
 
           },
           child: Card(
@@ -153,6 +157,8 @@ class _DashboardState extends State<Dashboard> {
           ),
         );
       }
+      return GestureDetector();
+
     });
 
 //
