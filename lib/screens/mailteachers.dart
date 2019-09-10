@@ -1,5 +1,3 @@
-import 'package:attendance_teacher/classes/teacher.dart';
-import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
