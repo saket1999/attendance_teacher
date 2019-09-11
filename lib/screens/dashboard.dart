@@ -4,6 +4,7 @@ import 'package:attendance_teacher/screens/createclass.dart';
 import 'package:attendance_teacher/screens/mailclass.dart';
 import 'package:attendance_teacher/screens/profile.dart';
 import 'package:attendance_teacher/screens/subjectlist.dart';
+import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -110,6 +111,9 @@ class _DashboardState extends State<Dashboard> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
+          if(_teacher.verify!=1)
+            toast('Your profile is not verified.');
+          else
 			Navigator.push(context, MaterialPageRoute(builder: (context) {
 				return CreateClass(_teacher);
 			}));

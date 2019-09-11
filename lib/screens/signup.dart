@@ -205,6 +205,7 @@ class _SignUpState extends State<SignUp> {
                                       _isLoading = true;
                                     });
                                     _signUpForm.currentState.save();
+                                    teacher.verify = 0;
                                     uploadPic(context);
 
                                     //Method made signUp if new user
