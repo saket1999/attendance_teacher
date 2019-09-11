@@ -56,7 +56,7 @@ class _LoginState extends State<Login> {
                   child: TextFormField(
                     obscureText: true,
                     onSaved: (value) {
-                      inputPass = Password.getHash(value);
+                      inputPass = value;
                     },
                     validator: (String value) {
                       if (value.length < 6)

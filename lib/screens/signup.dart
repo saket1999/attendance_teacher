@@ -119,7 +119,7 @@ class _SignUpState extends State<SignUp> {
                         child: TextFormField(
                           obscureText: true,
                           onSaved: (value) {
-                            teacher.pass = Password.getHash(value);
+                            teacher.pass = value;
                           },
                           validator: (String value) {
                             if (value.length<6 || _passKey.currentState.value != value )

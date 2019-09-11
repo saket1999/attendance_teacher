@@ -6,8 +6,16 @@ class Teacher {
 	String _mobile;
 	String _email;
 	String _documentId;
+	int _verify;
 
 	Teacher.blank();
+
+
+	int get verify => _verify;
+
+	set verify(int value) {
+		_verify = value;
+	}
 
 	String get documentId => _documentId;
 
@@ -45,14 +53,14 @@ class Teacher {
 		_teacherId = value;
 	}
 
-	Map<String, String> toMap() {
-		var map = Map<String, String>();
+	Map<String, dynamic> toMap() {
+		var map = Map<String, dynamic>();
 		map['teacherId'] = _teacherId;
 		map['pass'] = _pass;
 		map['name'] = _name;
 		map['mobile'] = _mobile;
 		map['email'] = _email;
-
+		map['verify'] = _verify;
 		return map;
 	}
 
@@ -62,6 +70,7 @@ class Teacher {
 		this._name = map['name'];
 		this._mobile = map['mobile'];
 		this._email = map['email'];
+		this._verify = map['verify'];
 	}
 
 }

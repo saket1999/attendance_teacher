@@ -2,6 +2,7 @@ import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/screens/createclass.dart';
 import 'package:attendance_teacher/screens/mailclass.dart';
+import 'package:attendance_teacher/screens/profile.dart';
 import 'package:attendance_teacher/screens/subjectlist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -115,6 +116,26 @@ class _DashboardState extends State<Dashboard> {
         },
         tooltip: 'Create new class',
         backgroundColor: Colors.blueAccent,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            ListTile(
+              title: Text('Profile'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return Profile(_teacher);
+                }));
+              },
+            ),
+            ListTile(
+              title: Text('Sign Out'),
+              onTap: () {
+
+              },
+            )
+          ],
+        ),
       ),
     );
   }

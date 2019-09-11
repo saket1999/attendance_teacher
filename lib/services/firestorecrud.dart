@@ -62,6 +62,18 @@ class FirestoreCRUD{
 		await Firestore.instance.collection('teach').add(teacher.toMap());
 		return true;
 	}
+
+	static Future<bool> profileUpdate(Teacher teacher, File _image, bool newPassword) async {
+		if(newPassword) {
+			await Firestore.instance.collection('teach').document(teacher.documentId).updateData({'name': teacher.name, 'pass': teacher.pass, 'email': teacher.email, 'mobile': teacher.mobile});
+		}
+		else
+			await Firestore.instance.collection('teach').document(teacher.documentId).updateData({'name': teacher.name, 'email': teacher.email, 'mobile': teacher.mobile});
+
+		if(_image!=null)
+			await uploadPic(teacher, _image);
+		return true;
+	}
 	
 	static Future<bool> createNewClass(Teaching subject) async {
 		int length = 0;
