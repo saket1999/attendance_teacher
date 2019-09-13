@@ -1,5 +1,6 @@
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
+import 'package:attendance_teacher/services/firestorecrud.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mailer/flutter_mailer.dart';
@@ -81,7 +82,7 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
       var studentDocId=studentDocumentIds.documents[i].data['docId'];
       var student=await Firestore.instance.collection('stud').document(studentDocId).get();
       var subject=await Firestore.instance.collection('stud').document(studentDocId).collection('subject').where('subjectId',isEqualTo: _teaching.subjectId).where('subjectName',isEqualTo: _teaching.subjectName).where('teacherId',isEqualTo: _teacher.teacherId).getDocuments();
-      print(studentDocId+' '+_teaching.subjectName+'  '+_teaching.subjectId+' '+_teacher.teacherId+' '+'  '+subject.documents.length.toString());
+//      print(studentDocId+' '+_teaching.subjectName+'  '+_teaching.subjectId+' '+_teacher.teacherId+' '+'  '+subject.documents.length.toString());
       if(subject.documents.length==0)
         continue;
 
@@ -89,20 +90,40 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
 
       int present=int.parse(subjectDocData['present']);
       int absent=int.parse(subjectDocData['absent']);
+      if(present<0)
+        present=0;
+      if(absent<0)
+        absent=0;
       int total=present+absent;
 
       double percentage;
       if(total!=0)
         percentage=present/total;
       else
-        percentage=100.0;
+        percentage=1.0;
+      percentage*=100.0;
       print(percentage);
-      if(percentage<0.75) {
+      if(percentage<75.0) {
+        bool b=true;
         listArray.add(Card(
           child: ListTile(
             title: Text(student.data['name']),
             subtitle: Text(student.data['regNo']),
-            trailing: Text(percentage.toString() + ' %'),),
+            trailing: RaisedButton(
+              child: Text('Allow at '+percentage.toInt().toString()+' %'),
+              onPressed: (){
+                print(b.toString());
+                if(b) {
+                  Firestore.instance.collection('allow').add({
+                    'regNo': student.data['name'],
+                    'teacherId': _teacher.teacherId,
+                    'subjectId': _teaching.subjectId
+                  });
+                  b=false;
+                }
+              },
+            ),
+          ),
         ));
         recipients.add(student.data['email']);
       }
