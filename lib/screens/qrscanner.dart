@@ -58,7 +58,7 @@ class _QrScannerState extends State<QrScanner> {
 					if(snapshot.documents.length>0) {
 						Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').where('date', isEqualTo: date).where('time', isEqualTo: time).where('day',isEqualTo: day).getDocuments().then((check) {
 							if(check.documents.length==0)
-								Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').add({'date': date, 'day': day, 'time': time, 'outcome': 'A'});
+								Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').add({'date': date, 'day': day, 'time': time, 'outcome': 'A', 'duration': timings.duration});
 						});
 
 					}
@@ -352,7 +352,7 @@ class _QrScannerState extends State<QrScanner> {
 			var docId = snapshot.documents[0].documentID;
 			Firestore.instance.collection('stud').document(qrText).collection('subject').document(docId).collection('attendance').where('date', isEqualTo: date).where('day', isEqualTo: day).where('time', isEqualTo: time).getDocuments().then((snapshot) {
 				if(snapshot.documents.length==0)
-					Firestore.instance.collection('stud').document(qrText).collection('subject').document(docId).collection('attendance').add({'date': date, 'day': day, 'time': time,'outcome': outcome});
+					Firestore.instance.collection('stud').document(qrText).collection('subject').document(docId).collection('attendance').add({'date': date, 'day': day, 'time': time,'outcome': outcome, 'duration': timings.duration});
 				else {
 					Firestore.instance.collection('stud').document(qrText).collection('subject').document(docId).collection('attendance').document(snapshot.documents[0].documentID).updateData({'outcome': outcome});
 				}

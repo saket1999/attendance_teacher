@@ -110,7 +110,6 @@ class _CreateClassState extends State<CreateClass> {
 										if (_createForm.currentState.validate()) {
 											_createForm.currentState.save();
 											_subject.teacherDocumentId = _teacher.documentId;
-											_subject.joiningCode = _subject.subjectId+_subject.classId;
 											setState(() {
 												_isLoading=true;
 											});

@@ -1,11 +1,14 @@
+import 'package:attendance_teacher/classes/student.dart';
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/classes/timings.dart';
 import 'package:attendance_teacher/screens/createtiming.dart';
 import 'package:attendance_teacher/screens/editattendance.dart';
 import 'package:attendance_teacher/screens/qrscanner.dart';
+import 'package:attendance_teacher/screens/swipe.dart';
 import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class SubjectList extends StatefulWidget {
@@ -31,7 +34,7 @@ class _SubjectListState extends State<SubjectList> {
   Widget build(BuildContext context) {
     return Scaffold(
 		appBar: AppBar(
-			title: Text('Timings List'),
+			title: Text('Timings'),
 		),
 		body: getTimings(),
 		floatingActionButton: FloatingActionButton(
@@ -99,8 +102,24 @@ class _SubjectListState extends State<SubjectList> {
 									),
 									ListTile(
 										title: Text('Cancel Class'),
-										onTap: () {
+										onTap: () async {
 
+											List<Student> students = List<Student>();
+											List<String> url = List<String>();
+
+											QuerySnapshot snapshot = await Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(_teaching.documentId).collection('studentsEnrolled').getDocuments();
+											for(int i=0; i<snapshot.documents.length; i++) {
+												var id = snapshot.documents[i].data['docId'];
+
+												DocumentSnapshot studentSnapshot = await Firestore.instance.collection('stud').document(id).get();
+												students.add(Student.fromMapObject(studentSnapshot.data));
+												students[students.length-1].documentId = id;
+												String singleUrl = await FirebaseStorage.instance.ref().child(students[i].regNo).getDownloadURL();
+												url.add(singleUrl);
+											}
+											Navigator.push(context, MaterialPageRoute(builder: (context) {
+												return Swipe(_teacher, _teaching, timings, students, url);
+											}));
 										},
 									)
 								],
