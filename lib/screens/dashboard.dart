@@ -3,6 +3,7 @@ import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/screens/createclass.dart';
 import 'package:attendance_teacher/screens/mailclass.dart';
 import 'package:attendance_teacher/screens/profile.dart';
+import 'package:attendance_teacher/screens/shortatendancelist.dart';
 import 'package:attendance_teacher/screens/subjectlist.dart';
 import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -163,22 +164,71 @@ class _DashboardState extends State<Dashboard> {
         Teaching subject = Teaching.fromMapObject(doc);
         subject.documentId = doc.documentID;
         subject.teacherDocumentId = _teacher.documentId;
-        return GestureDetector(
-          onTap: () {
-
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return SubjectList(_teacher, subject);
-            }));
+//        return GestureDetector(
+//          onTap: () {
+//
 //            Navigator.push(context, MaterialPageRoute(builder: (context) {
-//              return MailClass(subject,_teacher);
+//              return SubjectList(_teacher, subject);
 //            }));
-
-          },
-          child: Card(
-            child: ListTile(
-              title: Text(subject.subjectId),
-              subtitle: Text(subject.subjectName),
-            ),
+////            Navigator.push(context, MaterialPageRoute(builder: (context) {
+////              return MailClass(subject,_teacher);
+////            }));
+//
+//          },
+//          child: Card(
+//            child: ListTile(
+//              title: Text(subject.subjectId),
+//              subtitle: Text(subject.subjectName),
+//            ),
+//          ),
+//        );
+        return Card(
+          color: Colors.black,
+          child: ExpansionTile(
+              title: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text(
+                      subject.subjectName,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      subject.classId,
+                      style: TextStyle(
+                        fontSize: 15.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    ListTile(
+                      title: Text('Attendance'),
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          return SubjectList(_teacher, subject);
+                        }));
+                      },
+                    ),
+                    ListTile(
+                      title: Text('Short Attendance List'),
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          return SubjectShortAttendancelist(_teacher, subject);
+                        }));
+                      },
+                    ),
+                  ],
+                )
+              ]
           ),
         );
       }

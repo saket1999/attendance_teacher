@@ -31,7 +31,7 @@ class _SubjectListState extends State<SubjectList> {
   Widget build(BuildContext context) {
     return Scaffold(
 		appBar: AppBar(
-			title: Text('Subjects List'),
+			title: Text('Timings List'),
 		),
 		body: getTimings(),
 		floatingActionButton: FloatingActionButton(
