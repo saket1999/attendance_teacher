@@ -10,6 +10,9 @@ import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:loading/indicator/ball_pulse_indicator.dart';
+import 'package:loading/loading.dart';
 
 class SubjectList extends StatefulWidget {
 
@@ -29,6 +32,7 @@ class _SubjectListState extends State<SubjectList> {
 	_SubjectListState(this._teacher, this._teaching);
 
 	String barcode = "";
+	bool _isLoading = false;
 
 	@override
   Widget build(BuildContext context) {
@@ -36,10 +40,10 @@ class _SubjectListState extends State<SubjectList> {
 		appBar: AppBar(
 			title: Text('Timings'),
 		),
-		body: getTimings(),
+		body: _isLoading ? Center(child: SpinKitRing(color: Colors.white)):getTimings(),
 		floatingActionButton: FloatingActionButton(
 			child: Icon(Icons.add),
-			onPressed: () {
+			onPressed: _isLoading ? () {} : () {
 				Navigator.push(context, MaterialPageRoute(builder: (context) {
 					return CreateTiming(_teaching);
 				}));
@@ -102,24 +106,12 @@ class _SubjectListState extends State<SubjectList> {
 									),
 									ListTile(
 										title: Text('Cancel Class'),
-										onTap: () async {
+										onTap: () {
+											setState(() {
+											  _isLoading = true;
+											});
+											getDataSwipePage(timings);
 
-											List<Student> students = List<Student>();
-											List<String> url = List<String>();
-
-											QuerySnapshot snapshot = await Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(_teaching.documentId).collection('studentsEnrolled').getDocuments();
-											for(int i=0; i<snapshot.documents.length; i++) {
-												var id = snapshot.documents[i].data['docId'];
-
-												DocumentSnapshot studentSnapshot = await Firestore.instance.collection('stud').document(id).get();
-												students.add(Student.fromMapObject(studentSnapshot.data));
-												students[students.length-1].documentId = id;
-												String singleUrl = await FirebaseStorage.instance.ref().child(students[i].regNo).getDownloadURL();
-												url.add(singleUrl);
-											}
-											Navigator.push(context, MaterialPageRoute(builder: (context) {
-												return Swipe(_teacher, _teaching, timings, students, url);
-											}));
 										},
 									)
 								],
@@ -156,5 +148,28 @@ class _SubjectListState extends State<SubjectList> {
 		  toast('Task Completed Successfully');
 	  });
   }
+
+	void getDataSwipePage(Timings timings) async {
+		List<Student> students = List<Student>();
+		List<String> url = List<String>();
+
+		QuerySnapshot snapshot = await Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(_teaching.documentId).collection('studentsEnrolled').getDocuments();
+		for(int i=0; i<snapshot.documents.length; i++) {
+			var id = snapshot.documents[i].data['docId'];
+
+			DocumentSnapshot studentSnapshot = await Firestore.instance.collection('stud').document(id).get();
+			students.add(Student.fromMapObject(studentSnapshot.data));
+			students[students.length-1].documentId = id;
+			String singleUrl = await FirebaseStorage.instance.ref().child(students[i].regNo).getDownloadURL();
+			url.add(singleUrl);
+		}
+		bool result = await Navigator.push(context, MaterialPageRoute(builder: (context) {
+			return Swipe(_teacher, _teaching, timings, students, url);
+		}));
+
+		setState(() {
+		  _isLoading = result;
+		});
+	}
 
 }

@@ -93,7 +93,7 @@ class _MailClassState extends State<MailClass> {
                       Padding(
                         padding: EdgeInsets.all(10.0),
                         child: RaisedButton(
-                            child: _sendingMail?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Send Email'),
+                            child: (_sendingMail || _isLoading)?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Send Email'),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.0),
                             ),
@@ -134,9 +134,14 @@ class _MailClassState extends State<MailClass> {
     return;
   }
   Future<void> getRecipients() async {
-    QuerySnapshot docs=await Firestore.instance.collection('stud').where('classId',isEqualTo: _teaching.classId).getDocuments();
-    for(int i=0;i<docs.documents.length;i++)
-       recipients.add(docs.documents[i].data['email'].toString());
+//    QuerySnapshot docs=await Firestore.instance.collection('stud').where('classId',isEqualTo: _teaching.classId).getDocuments();
+    QuerySnapshot docs=await Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(_teaching.documentId).collection('studentsEnrolled').getDocuments();
+
+    for(int i=0;i<docs.documents.length;i++) {
+      DocumentSnapshot studentDocs = await Firestore.instance.collection('stud').document(docs.documents[i].data['docId']).get();
+      print('----------------------------------'+studentDocs.data['email']);
+      recipients.add(studentDocs.data['email'].toString());
+    }
     setState(() {
       _isLoading=false;
     });

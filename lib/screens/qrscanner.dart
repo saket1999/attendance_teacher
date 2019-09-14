@@ -5,6 +5,7 @@ import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -39,6 +40,8 @@ class _QrScannerState extends State<QrScanner> {
 	int present = 0;
 	int total = 0;
 
+	bool _isLoading = false;
+
 
 	var now = DateTime.now();
 	var date,day,time;
@@ -71,7 +74,7 @@ class _QrScannerState extends State<QrScanner> {
 	Widget build(BuildContext context) {
 		return WillPopScope(
 			child: Scaffold(
-				body: Column(
+				body: _isLoading ? Center(child: SpinKitRing(color: Colors.white)):Column(
 					children: <Widget>[
 						Expanded(
 							flex: 5,
@@ -95,8 +98,11 @@ class _QrScannerState extends State<QrScanner> {
 					],
 				),
 			),
-			onWillPop: () {
+			onWillPop: _isLoading? () {} : () {
 //				Navigator.pop(context);
+			setState(() {
+			  _isLoading = true;
+			});
 				getAttendanceData();
 //				attendanceDialog();
 			},

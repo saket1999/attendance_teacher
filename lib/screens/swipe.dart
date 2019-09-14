@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 
 class Swipe extends StatefulWidget {
@@ -40,6 +41,8 @@ class _SwipeState extends State<Swipe> {
 	int total = 0;
 	int present = 0;
 
+	bool _isLoading = false;
+
 	@override
 	void initState() {
 		super.initState();
@@ -69,7 +72,10 @@ class _SwipeState extends State<Swipe> {
 
 		CardController controller;
 		return WillPopScope(
-			onWillPop: () {
+			onWillPop: _isLoading ? () {} : () {
+				setState(() {
+				  _isLoading = true;
+				});
 				getAttendanceData();
 			},
 			child: Scaffold(
@@ -77,7 +83,7 @@ class _SwipeState extends State<Swipe> {
 					title: Text('Attendance'),
 				),
 				body: Center(
-					child: Container(
+					child: _isLoading ? Center(child: SpinKitRing(color: Colors.white)):Container(
 						height: MediaQuery.of(context).size.height * 0.6,
 						child: TinderSwapCard(
 							orientation: AmassOrientation.BOTTOM,
@@ -197,7 +203,7 @@ class _SwipeState extends State<Swipe> {
 				return WillPopScope(
 					onWillPop: () {
 						Navigator.pop(context);
-						Navigator.pop(context);
+						Navigator.pop(context, false);
 					},
 					child: Dialog(
 						shape: RoundedRectangleBorder(
