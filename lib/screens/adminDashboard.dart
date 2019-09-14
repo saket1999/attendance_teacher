@@ -1,6 +1,7 @@
 import 'package:attendance_teacher/classes/student.dart';
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/screens/allowprofilechange.dart';
+import 'package:attendance_teacher/screens/classavailable.dart';
 import 'package:attendance_teacher/screens/mailteachers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +66,9 @@ class AdminDashboard extends StatelessWidget{
                 onTap: (){
 
                   prefix0.Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return ClassAvailable();
+                  }));
                 },
               ),
             ],

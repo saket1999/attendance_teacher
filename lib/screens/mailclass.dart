@@ -122,6 +122,8 @@ class _MailClassState extends State<MailClass> {
     setState(() {
       _sendingMail=true;
     });
+    
+    body=body+'\n\n'+_teacher.name;//adding from message to email
     final MailOptions mailOptions= MailOptions(
       body: body,
       subject: subject,
