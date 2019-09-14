@@ -226,6 +226,14 @@ class _DashboardState extends State<Dashboard> {
                         }));
                       },
                     ),
+                    ListTile(
+                      title: Text('Email CLass'),
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          return MailClass(_teacher, subject);
+                        }));
+                      },
+                    ),
                   ],
                 )
               ]

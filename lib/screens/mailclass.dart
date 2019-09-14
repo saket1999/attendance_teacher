@@ -12,10 +12,10 @@ class MailClass extends StatefulWidget {
   Teacher _teacher;
   Teaching _teaching;
 
-  MailClass(this._teaching,this._teacher);
+  MailClass(this._teacher,this._teaching);
 
   @override
-  _MailClassState createState() => _MailClassState(_teaching,_teacher);
+  _MailClassState createState() => _MailClassState(_teacher,_teaching);
 }
 
 class _MailClassState extends State<MailClass> {
@@ -29,7 +29,7 @@ class _MailClassState extends State<MailClass> {
   bool _isLoading=true;
   bool _sendingMail=false;
 
-  _MailClassState(this._teaching,this._teacher);
+  _MailClassState(this._teacher,this._teaching);
 
   void initState() {
     super.initState();
