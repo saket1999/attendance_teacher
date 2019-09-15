@@ -124,7 +124,10 @@ class _MailTeachersState extends State<MailTeachers> {
   }
   Future<void> getRecipients() async {
     QuerySnapshot docs=await Firestore.instance.collection('teach').getDocuments();
-    toast(docs.documents.length.toString()+" teachers will be sent email");
+    var teacherCount=docs.documents.length-1;//One reduced because admin data is also saved as a teacher
+    if(teacherCount<=0)
+      teacherCount=0;
+    toast(teacherCount.toString()+" teachers will be sent email");
     for(int i=0;i<docs.documents.length;i++)
       recipients.add(docs.documents[i].data['email'].toString());
     setState(() {
