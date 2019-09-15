@@ -7,6 +7,7 @@ import 'package:attendance_teacher/screens/createtiming.dart';
 import 'package:attendance_teacher/screens/editattendance.dart';
 import 'package:attendance_teacher/screens/qrscanner.dart';
 import 'package:attendance_teacher/screens/swipe.dart';
+import 'package:attendance_teacher/services/firestorecrud.dart';
 import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -115,7 +116,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 			}
 		):
 		FloatingActionButton(
-			child: Icon(Icons.add),
+			child: Icon(Icons.add_comment),
 			tooltip: 'Add new extra class',
 			onPressed: () {
 				Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -289,6 +290,8 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 									ListTile(
 										title: Text('Cancel Class'),
 										onTap: () {
+											FirestoreCRUD.cancelClass(_teacher,_teaching,timings);
+											toast('Please Wait');
 										},
 									)
 								],
