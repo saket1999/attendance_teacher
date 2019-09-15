@@ -102,6 +102,22 @@ class FirestoreCRUD{
 		return true;
 	}
 
+	static Future<bool> createExtraClass(Teaching teaching, Timings timings, String date) async {
+		int length = 0;
+		await Firestore.instance.collection('teach').document(teaching.teacherDocumentId).collection('subject').document(teaching.documentId).collection('extraClass').where('date', isEqualTo: date).where('duration', isEqualTo: timings.duration).where('start', isEqualTo: timings.start).getDocuments().then((QuerySnapshot docs) {
+			length = docs.documents.length;
+		});
+		if(length > 0) {
+			toast('Already Exists.');
+			return false;
+		}
+		var toSend = timings.toMap();
+		toSend['date'] = date;
+		toSend.remove('day');
+		await Firestore.instance.collection('teach').document(teaching.teacherDocumentId).collection('subject').document(teaching.documentId).collection('extraClass').add(toSend);
+		return true;
+	}
+
 	static Future uploadPic(Teacher student,File _image) async {
 		String fileName = student.teacherId;
 		StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);

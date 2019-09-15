@@ -45,6 +45,10 @@ class _QrScannerState extends State<QrScanner> {
 
 	var now = DateTime.now();
 	var date,day,time;
+
+	String lastName;
+	String lastRegNo;
+	String lastOutcome;
 	
 	void initState() {
 		super.initState();
@@ -59,9 +63,9 @@ class _QrScannerState extends State<QrScanner> {
 				var id = snapshot.documents[i].data['docId'];
 				Firestore.instance.collection('stud').document(id).collection('subject').where('subjectId', isEqualTo: teaching.subjectId).where('teacherId', isEqualTo: _teacher.teacherId).getDocuments().then((snapshot) {
 					if(snapshot.documents.length>0) {
-						Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').where('date', isEqualTo: date).where('time', isEqualTo: time).where('day',isEqualTo: day).getDocuments().then((check) {
+						Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').where('date', isEqualTo: date).where('time', isEqualTo: time).getDocuments().then((check) {
 							if(check.documents.length==0)
-								Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').add({'date': date, 'day': day, 'time': time, 'outcome': 'A', 'duration': timings.duration});
+								Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').add({'date': date, 'time': time, 'outcome': 'A', 'duration': timings.duration});
 						});
 
 					}
@@ -91,8 +95,35 @@ class _QrScannerState extends State<QrScanner> {
 							),
 						),
 						Expanded(
-							child: Center(
-								child: Text(qrText),
+							child: Padding(
+							  padding: const EdgeInsets.all(8.0),
+							  child: lastName == null?Center(child: Text('Start taking Attendance', textScaleFactor: 2,)) : Center(
+							  	child: Column(
+							  		children: <Widget>[
+										Padding(
+										  padding: const EdgeInsets.all(6.0),
+										  child: Text(
+										  	'Name - '+lastName,
+										  	textScaleFactor: 2.0,
+										  ),
+										),
+							  			Padding(
+							  			  padding: const EdgeInsets.all(6.0),
+							  			  child: Text(
+											'RegNo - '+lastRegNo,
+											textScaleFactor: 1.5,
+										),
+							  			),
+							  			Padding(
+							  			  padding: const EdgeInsets.all(6.0),
+							  			  child: Text(
+											'Outcome - '+lastOutcome,
+											textScaleFactor: 1.5,
+										),
+							  			)
+							  		],
+							  	),
+							  ),
 							),
 						),
 					],
@@ -123,6 +154,7 @@ class _QrScannerState extends State<QrScanner> {
 				if (_doScan) {
 					qrText = scanData;
 					_doScan = false;
+					_isLoading = true;
 //					confirmDialogue();
 					getData();
 				}
@@ -315,7 +347,13 @@ class _QrScannerState extends State<QrScanner> {
 												color: Colors.red,
 												onPressed: () {
 													setAttendance('A');
-													_doScan = true;
+													setState(() {
+														_doScan = true;
+														_isLoading = false;
+														lastName = student['name'];
+														lastRegNo = student['regNo'];
+														lastOutcome = 'A';
+													});
 													Navigator.of(context).pop();
 												},
 											),
@@ -327,7 +365,13 @@ class _QrScannerState extends State<QrScanner> {
 												color: Colors.green,
 												onPressed: () {
 													setAttendance('P');
-													_doScan = true;
+													setState(() {
+														_doScan = true;
+														_isLoading = false;
+														lastName = student['name'];
+														lastRegNo = student['regNo'];
+														lastOutcome = 'P';
+													});
 													Navigator.of(context).pop();
 												},
 											),
@@ -356,9 +400,9 @@ class _QrScannerState extends State<QrScanner> {
 		var snapshot = await Firestore.instance.collection('stud').document(qrText).collection('subject').where('subjectId', isEqualTo: teaching.subjectId).where('teacherId', isEqualTo: _teacher.teacherId).getDocuments();
 		if(snapshot.documents.length>0) {
 			var docId = snapshot.documents[0].documentID;
-			Firestore.instance.collection('stud').document(qrText).collection('subject').document(docId).collection('attendance').where('date', isEqualTo: date).where('day', isEqualTo: day).where('time', isEqualTo: time).getDocuments().then((snapshot) {
+			Firestore.instance.collection('stud').document(qrText).collection('subject').document(docId).collection('attendance').where('date', isEqualTo: date).where('time', isEqualTo: time).getDocuments().then((snapshot) {
 				if(snapshot.documents.length==0)
-					Firestore.instance.collection('stud').document(qrText).collection('subject').document(docId).collection('attendance').add({'date': date, 'day': day, 'time': time,'outcome': outcome, 'duration': timings.duration});
+					Firestore.instance.collection('stud').document(qrText).collection('subject').document(docId).collection('attendance').add({'date': date, 'time': time,'outcome': outcome, 'duration': timings.duration});
 				else {
 					Firestore.instance.collection('stud').document(qrText).collection('subject').document(docId).collection('attendance').document(snapshot.documents[0].documentID).updateData({'outcome': outcome});
 				}
@@ -377,7 +421,7 @@ class _QrScannerState extends State<QrScanner> {
 
 //			toast(subSnapshot.documents.length.toString());
 			if(subSnapshot.documents.length>0) {
-				var attenSnapshot = await Firestore.instance.collection('stud').document(snapshot.documents[i].data['docId']).collection('subject').document(subSnapshot.documents[0].documentID).collection('attendance').where('date', isEqualTo: date).where('day', isEqualTo: day).where('time', isEqualTo: time).getDocuments();
+				var attenSnapshot = await Firestore.instance.collection('stud').document(snapshot.documents[i].data['docId']).collection('subject').document(subSnapshot.documents[0].documentID).collection('attendance').where('date', isEqualTo: date).where('time', isEqualTo: time).getDocuments();
 
 //				toast(attenSnapshot.documents[0].data['outcome']);
 				if(attenSnapshot.documents.length>0 && attenSnapshot.documents[0].data['outcome'] == 'P')

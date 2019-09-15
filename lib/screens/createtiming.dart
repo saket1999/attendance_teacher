@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/classes/timings.dart';
 import 'package:attendance_teacher/services/firestorecrud.dart';
@@ -109,42 +108,45 @@ class _CreateTimingState extends State<CreateTiming> {
 									),
 								),
 							),
-							Row(
-								children: <Widget>[
-									Expanded(
-										child: Container(
-											width: 50.0,
+							Padding(
+								padding: const EdgeInsets.all(10.0),
+								child: Row(
+									children: <Widget>[
+										Expanded(
+											child: Container(
+												width: 50.0,
+											),
 										),
-									),
-									RaisedButton(
-										child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0,):Text('Submit'),
-										onPressed: () {
-											if(_createForm.currentState.validate() && _isLoading == false) {
-												setState(() {
-												  _isLoading = true;
-												});
+										RaisedButton(
+											child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0,):Text('Submit'),
+											onPressed: () {
+												if(_createForm.currentState.validate() && _isLoading == false) {
+													setState(() {
+														_isLoading = true;
+													});
 
-												_createForm.currentState.save();
+													_createForm.currentState.save();
 
-												FirestoreCRUD.createTime(_teaching, _timings ).then((bool b) {
-													if(b == true) {
-														toast('Timing created successfully');
-														Navigator.of(context).pop();
-													}
-													else
-														setState(() {
-														  _isLoading = false;
-														});
-												});
-											}
-										},
-									),
-									Expanded(
-										child: Container(
-											width: 50.0,
+													FirestoreCRUD.createTime(_teaching, _timings ).then((bool b) {
+														if(b == true) {
+															toast('Timing created successfully');
+															Navigator.of(context).pop();
+														}
+														else
+															setState(() {
+																_isLoading = false;
+															});
+													});
+												}
+											},
 										),
-									),
-								],
+							  		Expanded(
+							  			child: Container(
+							  				width: 50.0,
+							  			),
+							  		),
+							  	],
+							  ),
 							)
 						],
 					),
