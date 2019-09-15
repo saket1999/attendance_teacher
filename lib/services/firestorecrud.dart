@@ -128,10 +128,25 @@ class FirestoreCRUD{
 			recipients.add(student.data['email']);
 		}
 		String subject='Extra Class of '+teaching.subjectName;
-		String body='An extra class is scheduled on\n\n'+'Date: '+timings.start+'\nStart Time: '+timings.start+'\nDuration: '+timings.duration+' hrs\nSubject: '+teaching.subjectName+'\n\n';
+		String body='An extra class is scheduled on\n\n'+'Date: '+date+'\nStart Time: '+timings.start+'\nDuration: '+timings.duration+' hrs\nSubject: '+teaching.subjectName+'\n\n';
 		if(recipients.length>0)
 			sendEmail(subject,body,recipients);
 		return true;
+	}
+
+	//method which cancels a scheduled class and sends email to students
+	static Future<void> cancelClass(Teacher teacher,Teaching teaching,Timings timings) async {
+		QuerySnapshot studentEnrolledDocs=await Firestore.instance.collection('teach').document(teaching.teacherDocumentId).collection('subject').document(teaching.documentId).collection('studentsEnrolled').getDocuments();
+		List<String> recipients=[];
+		for(int i=0;i<studentEnrolledDocs.documents.length;i++){
+			DocumentSnapshot student=await Firestore.instance.collection('stud').document(studentEnrolledDocs.documents[i].data['docId'].toString()).get();
+			recipients.add(student.data['email']);
+		}
+		String subject=teaching.subjectName+' class cancelled';
+		String body='The following scheduled class has been cancelled.\n\n'+'Day: '+timings.day+'\nStart Time: '+timings.start+'\nDuration: '+timings.duration+' hrs\nSubject: '+teaching.subjectName+'\n\nTecher in Charge: '+teacher.name;
+		if(recipients.length>0)
+			sendEmail(subject,body,recipients);
+		return;
 	}
 
 	//method to send an email
