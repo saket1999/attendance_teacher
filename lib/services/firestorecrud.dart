@@ -11,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mailer/flutter_mailer.dart';
 
 class FirestoreCRUD{
 	//  This function looks for the document for login
@@ -105,6 +106,8 @@ class FirestoreCRUD{
 
 	static Future<bool> createExtraClass(Teaching teaching, Timings timings, String date) async {
 		int length = 0;
+
+		//Adding class to database
 		await Firestore.instance.collection('teach').document(teaching.teacherDocumentId).collection('subject').document(teaching.documentId).collection('extraClass').where('date', isEqualTo: date).where('duration', isEqualTo: timings.duration).where('start', isEqualTo: timings.start).getDocuments().then((QuerySnapshot docs) {
 			length = docs.documents.length;
 		});
@@ -116,9 +119,34 @@ class FirestoreCRUD{
 		toSend['date'] = date;
 		toSend.remove('day');
 		await Firestore.instance.collection('teach').document(teaching.teacherDocumentId).collection('subject').document(teaching.documentId).collection('extraClass').add(toSend);
+
+		//Email send part
+		QuerySnapshot studentEnrolledDocs=await Firestore.instance.collection('teach').document(teaching.teacherDocumentId).collection('subject').document(teaching.documentId).collection('studentsEnrolled').getDocuments();
+		List<String> recipients=[];
+		for(int i=0;i<studentEnrolledDocs.documents.length;i++){
+			DocumentSnapshot student=await Firestore.instance.collection('stud').document(studentEnrolledDocs.documents[i].data['docId'].toString()).get();
+			recipients.add(student.data['email']);
+		}
+		String subject='Extra Class of '+teaching.subjectName;
+		String body='An extra class is scheduled on\n\n'+'Date: '+timings.start+'\nStart Time: '+timings.start+'\nDuration: '+timings.duration+' hrs\nSubject: '+teaching.subjectName+'\n\n';
+		if(recipients.length>0)
+			sendEmail(subject,body,recipients);
 		return true;
 	}
 
+	//method to send an email
+	static Future<void> sendEmail(String subject,String body,List<String> recipients) async {
+
+		final MailOptions mailOptions= MailOptions(
+			body: body,
+			subject: subject,
+			bccRecipients: recipients,
+		);
+		await FlutterMailer.send(mailOptions);
+		return;
+	}
+
+	//method to upload pic to firebase storage
 	static Future uploadPic(Teacher student,File _image) async {
 		String fileName = student.teacherId;
 		StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);

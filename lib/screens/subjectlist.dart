@@ -115,7 +115,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 			}
 		):
 		FloatingActionButton(
-			child: Icon(Icons.add),
+			child: Icon(Icons.add_comment),
 			tooltip: 'Add new extra class',
 			onPressed: () {
 				Navigator.push(context, MaterialPageRoute(builder: (context) {
