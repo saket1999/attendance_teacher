@@ -115,7 +115,7 @@ class AdminDashboard extends StatelessWidget{
         return GestureDetector(
           onTap: () {},
           child: Card(
-            color: Colors.black,
+//            color: Colors.black,
             child: ExpansionTile(
                 title: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -161,12 +161,14 @@ class AdminDashboard extends StatelessWidget{
                           children: <Widget>[
                             RaisedButton(
                               child: Text('Accept'),
+                              color: Colors.white,
                               onPressed: (){
                                 Firestore.instance.collection('teach').document(teacher.documentId).updateData({'verify':1});
                               },
                             ),
                             RaisedButton(
                               child: Text('Reject'),
+                              color: Colors.redAccent,
                               onPressed: (){
                                 Firestore.instance.collection('teach').document(teacher.documentId).updateData({'verify':-1});
                               },
@@ -213,7 +215,7 @@ class AdminDashboard extends StatelessWidget{
         return GestureDetector(
           onTap: () {},
           child: Card(
-            color: Colors.black,
+//            color: Colors.black,
             child: ExpansionTile(
                 title: Padding(
                   padding: const EdgeInsets.all(10.0),

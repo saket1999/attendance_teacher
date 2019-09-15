@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       title: 'Teacher Attendance Manager',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        brightness: Brightness.dark
+        brightness: Brightness.light
       ),
       home: Login(),
     );

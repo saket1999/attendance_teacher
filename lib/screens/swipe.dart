@@ -90,11 +90,12 @@ class _SwipeState extends State<Swipe> {
 				getAttendanceData();
 			},
 			child: Scaffold(
+				backgroundColor: Colors.white70,
 				appBar: AppBar(
 					title: Text('Attendance'),
 				),
 				body: Center(
-					child: _isLoading ? Center(child: SpinKitRing(color: Colors.white)):Container(
+					child: _isLoading ? Center(child: SpinKitRing(color: Colors.black)):Container(
 						height: MediaQuery.of(context).size.height * 0.6,
 						child: TinderSwapCard(
 							orientation: AmassOrientation.BOTTOM,

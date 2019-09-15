@@ -72,11 +72,12 @@ class _LoginState extends State<Login> {
                 Padding(
                   padding: EdgeInsets.all(10.0),
                   child: RaisedButton(
-                      child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Login'),
+                    color: Colors.black,
+                      child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Login', style: TextStyle(color: Colors.white),),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
-                      elevation: 20.0,
+                      elevation: 10.0,
                       onPressed: () {
                         if (_loginForm.currentState.validate()) {
                           _loginForm.currentState.save();

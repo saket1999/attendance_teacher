@@ -17,53 +17,46 @@ class _AllowProfileChangeState extends State<AllowProfileChange> {
   Widget teacherStudent=Container();
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Allow profile change',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          brightness: Brightness.dark
-      ),
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Text('Allow profile change'),
         ),
         body: ListView(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.all(10.0),
-            ),
-            Form(
-              key: _profileChange,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: TextFormField(
-                      onSaved: (value) {
-                        uniqueId = value;
-                      },
-                      decoration: InputDecoration(
-                          labelText: "Unique Id",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5.0))),
+              padding: const EdgeInsets.all(15.0),
+              child: Form(
+                key: _profileChange,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: TextFormField(
+                        onSaved: (value) {
+                          uniqueId = value;
+                        },
+                        decoration: InputDecoration(
+                            labelText: "Unique Id",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5.0))),
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: (){
-                      _profileChange.currentState.save();
-                      refreshTeacherStudent();
-                    },
-                  )
-                ],
+                    IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: (){
+                        _profileChange.currentState.save();
+                        refreshTeacherStudent();
+                      },
+                    )
+                  ],
+                ),
               ),
             ),
             teacherStudent,//This is the main widget which allows unlocking profile
           ],
         ),
-      ),
-    );
+      );
   }
 
 
@@ -75,7 +68,6 @@ class _AllowProfileChangeState extends State<AllowProfileChange> {
       teacher.documentId = snapshot.documents[0].documentID;
       bool enable=(snapshot.documents[0].data['verify']==1)?true:false;
       teacherStudent = Card(
-        color: Colors.black,
         child: ExpansionTile(
             title: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -136,7 +128,6 @@ class _AllowProfileChangeState extends State<AllowProfileChange> {
       student.documentId = snapshot2.documents[0].documentID;
       bool enable = (snapshot2.documents[0].data['verify'] == 1) ? true : false;
       teacherStudent = Card(
-        color: Colors.black,
         child: ExpansionTile(
             title: Padding(
               padding: const EdgeInsets.all(10.0),
