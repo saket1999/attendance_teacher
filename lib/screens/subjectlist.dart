@@ -140,6 +140,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 		var listView = ListView.builder(itemCount: snapshot.data.documents.length, itemBuilder: (context, index) {
 			if(index < snapshot.data.documents.length) {
 				var doc = snapshot.data.documents[index];
+				Timings timings = Timings.fromMapObject(doc);
 				return Card(
 					child: ExpansionTile(
 						key: GlobalKey(),
@@ -153,10 +154,39 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 								child: Column(
 									children: <Widget>[
 										ListTile(
-											title: Text('Take Attendance'),
-											onTap: () {
-
-											},
+											title: Row(
+												mainAxisAlignment: MainAxisAlignment.spaceBetween,
+												children: <Widget>[
+													Text('Take Attendance'),
+													GestureDetector(
+														child: Card(
+															child: Padding(
+																padding: const EdgeInsets.all(8.0),
+																child: Text('Qr Scan'),
+															),
+														),
+														onTap: () {
+															Navigator.push(context, MaterialPageRoute(builder: (context) {
+																return QrScanner.withDate(_teacher, _teaching, timings, doc['date']);
+															}));
+														},
+													),
+													GestureDetector(
+														child: Card(
+															child: Padding(
+																padding: const EdgeInsets.all(8.0),
+																child: Text('Swipe'),
+															),
+														),
+														onTap: () {
+															setState(() {
+																_isLoading = true;
+															});
+															getDataSwipePageWithDate(timings, doc);
+														},
+													),
+												],
+											),
 										),
 										ListTile(
 											title: Text('Edit Attendance'),
@@ -207,12 +237,39 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 							child: Column(
 								children: <Widget>[
 									ListTile(
-										title: Text('Take Attendance'),
-										onTap: () {
-											Navigator.push(context, MaterialPageRoute(builder: (context) {
-												return QrScanner(_teacher, _teaching, timings);
-											}));
-										},
+										title: Row(
+											mainAxisAlignment: MainAxisAlignment.spaceBetween,
+											children: <Widget>[
+												Text('Take Attendance'),
+												GestureDetector(
+													child: Card(
+														child: Padding(
+														  padding: const EdgeInsets.all(8.0),
+														  child: Text('Qr Scan'),
+														),
+													),
+													onTap: () {
+														Navigator.push(context, MaterialPageRoute(builder: (context) {
+															return QrScanner(_teacher, _teaching, timings);
+														}));
+													},
+												),
+												GestureDetector(
+													child: Card(
+														child: Padding(
+															padding: const EdgeInsets.all(8.0),
+															child: Text('Swipe'),
+														),
+													),
+													onTap: () {
+														setState(() {
+															_isLoading = true;
+														});
+														getDataSwipePage(timings);
+													},
+												),
+											],
+										),
 									),
 									ListTile(
 										title: Text('Bunk'),
@@ -232,11 +289,6 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 									ListTile(
 										title: Text('Cancel Class'),
 										onTap: () {
-											setState(() {
-											  _isLoading = true;
-											});
-											getDataSwipePage(timings);
-
 										},
 									)
 								],
@@ -293,6 +345,29 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 
 		setState(() {
 		  _isLoading = result;
+		});
+	}
+
+	void getDataSwipePageWithDate(Timings timings, var doc) async {
+		List<Student> students = List<Student>();
+		List<String> url = List<String>();
+
+		QuerySnapshot snapshot = await Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(_teaching.documentId).collection('studentsEnrolled').getDocuments();
+		for(int i=0; i<snapshot.documents.length; i++) {
+			var id = snapshot.documents[i].data['docId'];
+
+			DocumentSnapshot studentSnapshot = await Firestore.instance.collection('stud').document(id).get();
+			students.add(Student.fromMapObject(studentSnapshot.data));
+			students[students.length-1].documentId = id;
+			String singleUrl = await FirebaseStorage.instance.ref().child(students[i].regNo).getDownloadURL();
+			url.add(singleUrl);
+		}
+		bool result = await Navigator.push(context, MaterialPageRoute(builder: (context) {
+			return Swipe.withDate(_teacher, _teaching, timings, students, url, doc['date']);
+		}));
+
+		setState(() {
+			_isLoading = result;
 		});
 	}
 

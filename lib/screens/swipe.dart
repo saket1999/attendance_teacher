@@ -17,11 +17,18 @@ class Swipe extends StatefulWidget {
 	Timings timings;
 	List<Student> students;
 	List<String> url;
+	String _extraDate;
 
+	Swipe.withDate(this.teacher, this.teaching, this.timings, this.students, this.url, this._extraDate);
 	Swipe(this.teacher, this.teaching, this.timings, this.students, this.url);
 
 	@override
-	_SwipeState createState() => _SwipeState(teacher, teaching, timings, students, url);
+	_SwipeState createState() {
+		if(_extraDate == null)
+			return _SwipeState(teacher, teaching, timings, students, url);
+		else
+			return _SwipeState.withDate(teacher, teaching, timings, students, url, _extraDate);
+	}
 }
 
 class _SwipeState extends State<Swipe> {
@@ -31,11 +38,13 @@ class _SwipeState extends State<Swipe> {
 	Timings timings;
 	List<Student> students;
 	List<String> url;
+	String _extraDate;
 
 	_SwipeState(this.teacher, this.teaching, this.timings, this.students, this.url);
+	_SwipeState.withDate(this.teacher, this.teaching, this.timings, this.students, this.url, this._extraDate);
 
 	var now = DateTime.now();
-	var date,day,time;
+	var date,time;
 	bool swipeDirection = true;		//true for right, false for left
 
 	int total = 0;
@@ -47,8 +56,10 @@ class _SwipeState extends State<Swipe> {
 	void initState() {
 		super.initState();
 
-		date = now.year.toString()+'-'+now.month.toString()+'-'+now.day.toString();
-		day = timings.day;
+		if(_extraDate == null)
+			date = now.year.toString()+'-'+now.month.toString()+'-'+now.day.toString();
+		else
+			date = _extraDate;
 		time = timings.start;
 
 		Firestore.instance.collection('teach').document(teacher.documentId).collection('subject').document(teaching.documentId).collection('studentsEnrolled').getDocuments().then((snapshot) {
@@ -226,22 +237,6 @@ class _SwipeState extends State<Swipe> {
 												Container(width: 10),
 												Text(
 													date,
-													textScaleFactor: 1.5,
-												)
-											],
-										),
-									),
-									Card(
-										child: Row(
-											mainAxisAlignment: MainAxisAlignment.center,
-											children: <Widget>[
-												Text(
-													'Day',
-													textScaleFactor: 1.5,
-												),
-												Container(width: 10),
-												Text(
-													day,
 													textScaleFactor: 1.5,
 												)
 											],

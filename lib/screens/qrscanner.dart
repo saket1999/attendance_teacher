@@ -16,10 +16,17 @@ class QrScanner extends StatefulWidget {
 	Teacher _teacher;
 	Teaching teaching;
 	Timings timings;
+	String _extraDate;
 	QrScanner(this._teacher, this.teaching, this.timings);
+	QrScanner.withDate(this._teacher, this.teaching, this.timings, this._extraDate);
 
 	@override
-  _QrScannerState createState() => _QrScannerState(_teacher, teaching, timings);
+	_QrScannerState createState() {
+		if(_extraDate == null)
+			return _QrScannerState(_teacher, teaching, timings);
+		else
+			return _QrScannerState.withDate(_teacher, teaching, timings, _extraDate);
+	}
 }
 
 class _QrScannerState extends State<QrScanner> {
@@ -27,7 +34,10 @@ class _QrScannerState extends State<QrScanner> {
 	Teacher _teacher;
 	Teaching teaching;
 	Timings timings;
+	String _extraDate;
 	_QrScannerState(this._teacher, this.teaching, this.timings);
+
+	_QrScannerState.withDate(this._teacher, this.teaching, this.timings, this._extraDate);
 
 	GlobalKey qrKey = GlobalKey();
 	var qrText = "";
@@ -44,7 +54,7 @@ class _QrScannerState extends State<QrScanner> {
 
 
 	var now = DateTime.now();
-	var date,day,time;
+	var date,time;
 
 	String lastName;
 	String lastRegNo;
@@ -53,9 +63,10 @@ class _QrScannerState extends State<QrScanner> {
 	void initState() {
 		super.initState();
 
-
-		date = now.year.toString()+'-'+now.month.toString()+'-'+now.day.toString();
-		day = timings.day;
+		if(_extraDate == null)
+			date = now.year.toString()+'-'+now.month.toString()+'-'+now.day.toString();
+		else
+			date = _extraDate;
 		time = timings.start;
 
 		Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(teaching.documentId).collection('studentsEnrolled').getDocuments().then((snapshot) {
@@ -192,22 +203,6 @@ class _QrScannerState extends State<QrScanner> {
 												Container(width: 10),
 												Text(
 													date,
-													textScaleFactor: 1.5,
-												)
-											],
-										),
-									),
-									Card(
-										child: Row(
-											mainAxisAlignment: MainAxisAlignment.center,
-											children: <Widget>[
-												Text(
-													'Day',
-													textScaleFactor: 1.5,
-												),
-												Container(width: 10),
-												Text(
-													day,
 													textScaleFactor: 1.5,
 												)
 											],
