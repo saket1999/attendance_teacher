@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/classes/timings.dart';
+import 'package:attendance_teacher/screens/adminDashboard.dart';
 import 'package:attendance_teacher/screens/dashboard.dart';
 import 'package:attendance_teacher/services/password.dart';
 import 'package:attendance_teacher/services/toast.dart';
@@ -24,7 +25,6 @@ class FirestoreCRUD{
 	static Future<bool> login(BuildContext context,Teacher teacher,inputPass) async {
 
 		Teacher incoming = Teacher.blank();
-		bool value=false;
 
 		await FirestoreCRUD.getDocsForLogin(teacher,inputPass)
 			.then((QuerySnapshot docs) {
@@ -32,14 +32,15 @@ class FirestoreCRUD{
 				incoming = Teacher.fromMapObject(docs.documents[0].data);
 				incoming.documentId = docs.documents[0].documentID;
 				teacher = incoming;
-				value = true;
-				Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Dashboard(teacher)), (Route<dynamic> route) => false);
+				if(teacher.verify==404)
+					Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => AdminDashboard()), (Route<dynamic> route) => false);
+				else
+					Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Dashboard(teacher)), (Route<dynamic> route) => false);
 
 			}
 			catch(e){
 				toast('Wrong credentials');
 				print(e);
-				value=false;
 			}
 		});
 		return false;

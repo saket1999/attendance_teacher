@@ -115,7 +115,7 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
                 print(b.toString());
                 if(b) {
                   Firestore.instance.collection('allow').add({
-                    'regNo': student.data['name'],
+                    'regNo': student.data['regNo'],
                     'teacherId': _teacher.teacherId,
                     'subjectId': _teaching.subjectId
                   });
