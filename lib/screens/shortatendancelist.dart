@@ -102,8 +102,9 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
       else
         percentage=1.0;
       percentage*=100.0;
+      print(subjectDocData);
       print(percentage);
-      if(percentage<75.0) {
+      if(percentage<75) {
         bool b=true;
         listArray.add(Card(
           child: ListTile(
@@ -127,9 +128,9 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
         ));
         recipients.add(student.data['email']);
       }
-      shortAttendanceList=ListView(children: listArray);
       setState(() {});
     }
+    shortAttendanceList=ListView(children: listArray);
     _isLoading=false;
     setState(() {});
   }
