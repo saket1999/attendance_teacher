@@ -38,13 +38,7 @@ class _MailClassState extends State<MailClass> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Teacher Attendance Manager',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          brightness: Brightness.dark
-      ),
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -114,8 +108,7 @@ class _MailClassState extends State<MailClass> {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 
   Future<void> func() async {

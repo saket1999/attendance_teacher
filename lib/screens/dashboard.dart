@@ -1,6 +1,7 @@
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/screens/createclass.dart';
+import 'package:attendance_teacher/screens/login.dart';
 import 'package:attendance_teacher/screens/mailclass.dart';
 import 'package:attendance_teacher/screens/profile.dart';
 import 'package:attendance_teacher/screens/shortatendancelist.dart';
@@ -9,6 +10,7 @@ import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
 
@@ -151,7 +153,8 @@ class _DashboardState extends State<Dashboard> {
             ListTile(
               title: Text('Sign Out'),
               onTap: () {
-
+                clearSharedPrefs();
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Login()), (Route<dynamic> route) => false);
               },
             )
           ],
@@ -270,5 +273,11 @@ class _DashboardState extends State<Dashboard> {
       _url = url;
     });
 
+  }
+
+  void clearSharedPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('storedObject', '');
+    prefs.setString('storedId', '');
   }
 }

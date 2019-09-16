@@ -79,7 +79,7 @@ class _CreateExtraClassState extends State<CreateExtraClass> {
 										},
 										decoration: InputDecoration(
 											labelText: 'Date and Time',
-											errorStyle: TextStyle(color: Colors.yellow),
+											errorStyle: TextStyle(color: Colors.red),
 											border: OutlineInputBorder(
 												borderRadius: BorderRadius.circular(5.0))
 										),
@@ -98,7 +98,7 @@ class _CreateExtraClassState extends State<CreateExtraClass> {
 										},
 										decoration: InputDecoration(
 											labelText: 'Duration of Class',
-											errorStyle: TextStyle(color: Colors.yellow),
+											errorStyle: TextStyle(color: Colors.red),
 											border: OutlineInputBorder(
 												borderRadius: BorderRadius.circular(5.0))
 										),

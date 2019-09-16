@@ -65,7 +65,7 @@ class _EditAttendanceState extends State<EditAttendance> {
 									},
 									decoration: InputDecoration(
 										labelText: 'Registeration Number',
-										errorStyle: TextStyle(color: Colors.yellow),
+										errorStyle: TextStyle(color: Colors.red),
 										border: OutlineInputBorder(
 											borderRadius: BorderRadius.circular(5.0))
 									),
@@ -92,7 +92,7 @@ class _EditAttendanceState extends State<EditAttendance> {
 									},
 									decoration: InputDecoration(
 										labelText: 'Date',
-										errorStyle: TextStyle(color: Colors.yellow),
+										errorStyle: TextStyle(color: Colors.red),
 										border: OutlineInputBorder(
 											borderRadius: BorderRadius.circular(5.0))
 									),

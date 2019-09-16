@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:attendance_teacher/classes/teacher.dart';
@@ -12,6 +13,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mailer/flutter_mailer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FirestoreCRUD{
 	//  This function looks for the document for login
@@ -33,6 +35,7 @@ class FirestoreCRUD{
 				incoming = Teacher.fromMapObject(docs.documents[0].data);
 				incoming.documentId = docs.documents[0].documentID;
 				teacher = incoming;
+				storeData(teacher);
 				if(teacher.verify==404)
 					Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => AdminDashboard()), (Route<dynamic> route) => false);
 				else
@@ -167,6 +170,12 @@ class FirestoreCRUD{
 		StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
 		StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
 		StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+	}
+
+	static void storeData(Teacher teacher) async {
+		final SharedPreferences prefs = await SharedPreferences.getInstance();
+		prefs.setString('storedObject', json.encode(teacher.toMap()));
+		prefs.setString('storedId', teacher.documentId);
 	}
 
 }

@@ -46,7 +46,7 @@ class _LoginState extends State<Login> {
                     },
                     decoration: InputDecoration(
                         labelText: "Teacher's ID",
-                        errorStyle: TextStyle(color: Colors.yellow),
+                        errorStyle: TextStyle(color: Colors.red),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0))),
                   ),
@@ -64,7 +64,7 @@ class _LoginState extends State<Login> {
                     },
                     decoration: InputDecoration(
                         labelText: 'Password',
-                        errorStyle: TextStyle(color: Colors.yellow),
+                        errorStyle: TextStyle(color: Colors.red),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(5.0))),
                   ),

@@ -38,12 +38,7 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          brightness: Brightness.dark
-      ),
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -66,8 +61,7 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
           ),
         ),
         body: shortAttendanceList,
-      ),
-    );
+      );
   }
 
   Future<void> shortAttendanceListGenerator() async {
