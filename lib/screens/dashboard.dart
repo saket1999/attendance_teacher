@@ -13,35 +13,51 @@ import 'package:flutter/material.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcase.dart';
+import 'package:showcaseview/showcase_widget.dart';
 
 class Dashboard extends StatefulWidget {
 
   Teacher _teacher;
+  bool getHelp;
 
-  Dashboard(this._teacher);
+  Dashboard(this._teacher, this.getHelp);
 
   @override
-  _DashboardState createState() => _DashboardState(_teacher);
+  DashboardState createState() => DashboardState(_teacher, getHelp);
 }
 
-class _DashboardState extends State<Dashboard> {
+class DashboardState extends State<Dashboard> {
 
   Teacher _teacher;
-
+  bool getHelp;
   String _url;
 
-  _DashboardState(this._teacher);
+  DashboardState(this._teacher, this.getHelp);
 
   void initState() {
     super.initState();
     getURL();
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  GlobalKey _one = GlobalKey();
+  GlobalKey _two = GlobalKey();
+  GlobalKey _three = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(ModalRoute.of(context).isCurrent&& getHelp) {
+        getHelp = false;
+        return ShowCaseWidget.startShowCase(context, [_one, _two, _three]);
+      }
+    });
+
     var top = 0.0;
     return Scaffold(
+      key: _scaffoldKey,
       body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxisScrolled) {
             return <Widget>[
@@ -53,6 +69,17 @@ class _DashboardState extends State<Dashboard> {
                     expandedHeight: 170.0,
                     floating: true,
                     pinned: true,
+                    leading: Showcase(
+                      key: _two,
+                      description: 'Press to open additional settings',
+                      shapeBorder: CircleBorder(),
+                      child: IconButton(
+                        icon: Icon(Icons.dehaze),
+                        onPressed: () {
+                          _scaffoldKey.currentState.openDrawer();
+                        },
+                      ),
+                    ),
                     flexibleSpace: LayoutBuilder(
                       builder: (BuildContext context, BoxConstraints constraints) {
                         top = constraints.biggest.height;
@@ -67,57 +94,62 @@ class _DashboardState extends State<Dashboard> {
                             background: Card(
                               elevation: 20.0,
                               color: Colors.blue,
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: CircleAvatar(
-                                        radius: 50.0,
-                                        backgroundColor: Colors.blue,
-                                        child: ClipOval(
-                                          child: SizedBox(
-                                            width: 100.0,
-                                            height: 100.0,
-                                            child: _url!=null?Image.network(_url):DecoratedBox(decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/default.png')))),
+                              child: Showcase(
+                                key: _three,
+                                description: "Teacher's Profile",
+                                shapeBorder: CircleBorder(),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: CircleAvatar(
+                                          radius: 50.0,
+                                          backgroundColor: Colors.blue,
+                                          child: ClipOval(
+                                            child: SizedBox(
+                                              width: 100.0,
+                                              height: 100.0,
+                                              child: _url!=null?Image.network(_url):DecoratedBox(decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/default.png')))),
+                                            ),
                                           ),
                                         ),
+
                                       ),
-
-                                    ),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.all(6.0),
-                                          child: Container(
-                                            child: Text(
-                                              _teacher.name,
-                                              textScaleFactor: 2,
-                                              style: TextStyle(
-                                                color: Colors.white
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(6.0),
-                                          child: Container(
-                                            child: Text(
-                                              _teacher.teacherId,
-                                              textScaleFactor: 1.25,
-                                              style: TextStyle(
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.all(6.0),
+                                            child: Container(
+                                              child: Text(
+                                                _teacher.name,
+                                                textScaleFactor: 2,
+                                                style: TextStyle(
                                                   color: Colors.white
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(6.0),
+                                            child: Container(
+                                              child: Text(
+                                                _teacher.teacherId,
+                                                textScaleFactor: 1.25,
+                                                style: TextStyle(
+                                                    color: Colors.white
+                                                ),
+                                              ),
+                                            ),
+                                          ),
 
-                                      ],
-                                    )
-                                  ]
+                                        ],
+                                      )
+                                    ]
 
+                                ),
                               ),
                             )
                         );
@@ -131,25 +163,35 @@ class _DashboardState extends State<Dashboard> {
           },
           body: getSubjects()
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          if(_teacher.verify==0)
-            toast('Your profile is not yet verified.');
-          else if(_teacher.verify==-1)
-            toast('Please correct and update profile');
-          else
+      floatingActionButton: Showcase(
+        key: _one,
+        description: 'Tap to create new class',
+        shapeBorder: CircleBorder(),
+        child: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            if(_teacher.verify==0)
+              toast('Your profile is not yet verified.');
+            else if(_teacher.verify==-1)
+              toast('Please correct and update profile');
+            else
 			Navigator.push(context, MaterialPageRoute(builder: (context) {
 				return CreateClass(_teacher);
 			}));
-        },
-        tooltip: 'Create new class',
-        backgroundColor: Colors.blueAccent,
+          },
+          tooltip: 'Create new class',
+          backgroundColor: Colors.blueAccent,
+        ),
       ),
       drawer: Drawer(
         child: ListView(
           children: <Widget>[
-            DrawerHeader(child: Icon(Icons.account_circle)),
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue
+              ),
+                child: Icon(Icons.account_circle)
+            ),
             ListTile(
               title: Text('Profile'),
               onTap: () {
@@ -162,7 +204,7 @@ class _DashboardState extends State<Dashboard> {
               title: Text('Sign Out'),
               onTap: () {
                 clearSharedPrefs();
-                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Login()), (Route<dynamic> route) => false);
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Login(false)), (Route<dynamic> route) => false);
               },
             )
           ],

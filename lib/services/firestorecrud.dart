@@ -15,6 +15,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mailer/flutter_mailer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcase_widget.dart';
 
 class FirestoreCRUD{
 	//  This function looks for the document for login
@@ -26,7 +27,7 @@ class FirestoreCRUD{
 
 
 	//This function is called for login
-	static Future<bool> login(BuildContext context,Teacher teacher,inputPass) async {
+	static Future<bool> login(BuildContext context,Teacher teacher,inputPass, bool getHelp) async {
 
 		Teacher incoming = Teacher.blank();
 
@@ -40,7 +41,7 @@ class FirestoreCRUD{
 				if(teacher.verify==404)
 					Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => AdminDashboard()), (Route<dynamic> route) => false);
 				else
-					Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Dashboard(teacher)), (Route<dynamic> route) => false);
+					Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => ShowCaseWidget(child: Dashboard(teacher, getHelp))), (Route<dynamic> route) => false);
 
 			}
 			catch(e){
