@@ -1,13 +1,36 @@
-import 'dart:convert';
+/*This code is the Teacher/Admin part of the 'Present for Future' attendance management system. This app supports teacher and admin login.
+* Teacher part facilitates:
+*      Creating new class
+*      Listing timings for each class
+*      Creating an extra class
+*      Taking attendance
+*      Generating Short attendance list
+*      Send notice/assignment/message to a particular class
+* Admin part facilitates:
+*      Verify teacher and student login
+*      Mail all teachers
+*      Unlock profile of teachers and students for editing
+*      See short list of students in each subject of each class.
+*
+*
+* Language: Dart
+* IDE: Android Studio
+* Database: Firebase Firestore
+*
+* Note:  Firebase server currently has 8(eight) cloud functions triggered on different activities of the app of Firestore*/
 
+
+/*isLoading and sendingMail are standard boolean variable used throughout project to set particular screen to loading mode*/
+
+
+import 'dart:convert';
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/screens/adminDashboard.dart';
 import 'package:attendance_teacher/screens/dashboard.dart';
 import 'package:attendance_teacher/screens/login.dart';
-import 'package:attendance_teacher/screens/mailteachers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+/*Checking if a user is already logged int o the app. If logged in user is shown the dashboard.*/
 void main() {
 
   SharedPreferences.getInstance().then((prefs) {
@@ -23,7 +46,8 @@ void main() {
   });
 
 }
-
+/*Admin has the verify flag 404*/
+/*This routes the user to Login or the dashboard*/
 class MyApp extends StatelessWidget {
 
   bool check;

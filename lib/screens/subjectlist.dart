@@ -314,10 +314,14 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 	  var now = DateTime.now();
 	  var date = now.year.toString()+'-'+now.month.toString()+'-'+now.day.toString();
 	  var time = timings.start;
+		List<String> recipients=[];
 
 	  Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(_teaching.documentId).collection('studentsEnrolled').getDocuments().then((snapshot) {
 		  for(int i=0; i<snapshot.documents.length; i++) {
+		  	//storing student docID in "var id"
 			  var id = snapshot.documents[i].data['docId'];
+				//adding email to recipient list
+			  recipients.add(snapshot.documents[i].data['email']);
 			  Firestore.instance.collection('stud').document(id).collection('subject').where('subjectId', isEqualTo: _teaching.subjectId).where('teacherId', isEqualTo: _teacher.teacherId).getDocuments().then((snapshot) {
 				  if(snapshot.documents.length>0) {
 					  Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').where('date', isEqualTo: date).where('time', isEqualTo: time).getDocuments().then((check) {
@@ -328,8 +332,13 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 				  }
 			  });
 		  }
-		  toast('Task Completed Successfully');
+		  toast('Sending email to all students');
 	  });
+
+	  //This code send email to all students to notify bunk
+	  String subject='Mass Bunk in '+_teaching.subjectName;
+	  String body='All students have been marked absent for the below mentioned class\n\nSubject: '+_teaching.subjectName+'\nDate: '+date+'\nTime: '+time+'\n\nStricter actions will be taken if mass bunk is attempted in future.\n\nTeacher incharge '+_teacher.name;
+	  FirestoreCRUD.sendEmail(subject, body, recipients);
   }
 
 	void getDataSwipePage(Timings timings) async {

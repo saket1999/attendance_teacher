@@ -32,6 +32,8 @@ class _DashboardState extends State<Dashboard> {
 
   _DashboardState(this._teacher);
 
+
+  /*User profile is url is downloaded in the initState method*/
   void initState() {
     super.initState();
     getURL();
@@ -39,6 +41,29 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+
+    /*UI part of Dashboard
+    *
+    * Sliver app bar:
+    *   Profile Image
+    *   Teacher's Name
+    *   Teacher's Id
+    *
+    *
+    * Body:
+    *   List view of Subjects taught in various classes
+    *      Take attendance
+    *      Short attendance list
+    *      email class
+    *
+    *
+    * App Drawer:
+    *   Profile change
+    *   Sign out option
+    *
+    *
+    * Floating Action Button:
+    *   Create new class*/
 
     var top = 0.0;
     return Scaffold(
@@ -58,7 +83,6 @@ class _DashboardState extends State<Dashboard> {
                         top = constraints.biggest.height;
                         return FlexibleSpaceBar(
                             centerTitle: true,
-
                             title: AnimatedOpacity(
                               duration: Duration(milliseconds: 300),
                               opacity: top < 90.0 ? 1.0: 0.0,
@@ -117,7 +141,6 @@ class _DashboardState extends State<Dashboard> {
                                       ],
                                     )
                                   ]
-
                               ),
                             )
                         );
@@ -126,10 +149,9 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
               )
-
             ];
           },
-          body: getSubjects()
+          body: getSubjects()//Calls a stream builder of subjects
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -139,9 +161,9 @@ class _DashboardState extends State<Dashboard> {
           else if(_teacher.verify==-1)
             toast('Please correct and update profile');
           else
-			Navigator.push(context, MaterialPageRoute(builder: (context) {
-				return CreateClass(_teacher);
-			}));
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+				      return CreateClass(_teacher);
+			      }));
         },
         tooltip: 'Create new class',
         backgroundColor: Colors.blueAccent,
@@ -171,6 +193,7 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  /*getSubjects returns a stream builder which creates a ListView with realtime updates. Stream is the Firestore reference to subjects of the teacher*/
   Widget getSubjects() {
     return StreamBuilder<QuerySnapshot> (
       stream: Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').snapshots(),
@@ -182,6 +205,7 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  /*This creates a list view of subjects. Each subject is an expansion tile with multiple options*/
   getSubjectList(AsyncSnapshot<QuerySnapshot> snapshot) {
 
     var listView = ListView.builder(itemCount: snapshot.data.documents.length,itemBuilder: (context, index) {
@@ -190,26 +214,7 @@ class _DashboardState extends State<Dashboard> {
         Teaching subject = Teaching.fromMapObject(doc);
         subject.documentId = doc.documentID;
         subject.teacherDocumentId = _teacher.documentId;
-//        return GestureDetector(
-//          onTap: () {
-//
-//            Navigator.push(context, MaterialPageRoute(builder: (context) {
-//              return SubjectList(_teacher, subject);
-//            }));
-////            Navigator.push(context, MaterialPageRoute(builder: (context) {
-////              return MailClass(subject,_teacher);
-////            }));
-//
-//          },
-//          child: Card(
-//            child: ListTile(
-//              title: Text(subject.subjectId),
-//              subtitle: Text(subject.subjectName),
-//            ),
-//          ),
-//        );
         return Card(
-//          color: Colors.black12,
           child: ExpansionTile(
               title: Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -264,13 +269,11 @@ class _DashboardState extends State<Dashboard> {
         );
       }
       return GestureDetector();
-
     });
-
-//
     return listView;
   }
 
+  //Looks for profile image url in Firebase storagea and sets it to the ui
   void getURL() async{
     String url;
     StorageReference ref = FirebaseStorage.instance.ref().child(_teacher.teacherId);
@@ -282,7 +285,7 @@ class _DashboardState extends State<Dashboard> {
     });
 
   }
-
+  //Shared prefs wil be cleared on sign out
   void clearSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('storedObject', '');
