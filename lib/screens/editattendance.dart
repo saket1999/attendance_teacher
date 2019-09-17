@@ -61,11 +61,11 @@ class _EditAttendanceState extends State<EditAttendance> {
 									},
 									validator: (String value) {
 										if(value.length != 8)
-											return 'Enter valid Registration Number';
+											return 'Enter valid Registeration Number';
 									},
 									decoration: InputDecoration(
-										labelText: 'Registration Number',
-										errorStyle: TextStyle(color: Colors.yellow),
+										labelText: 'Registeration Number',
+										errorStyle: TextStyle(color: Colors.red),
 										border: OutlineInputBorder(
 											borderRadius: BorderRadius.circular(5.0))
 									),
@@ -92,7 +92,7 @@ class _EditAttendanceState extends State<EditAttendance> {
 									},
 									decoration: InputDecoration(
 										labelText: 'Date',
-										errorStyle: TextStyle(color: Colors.yellow),
+										errorStyle: TextStyle(color: Colors.red),
 										border: OutlineInputBorder(
 											borderRadius: BorderRadius.circular(5.0))
 									),

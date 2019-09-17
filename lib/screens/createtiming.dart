@@ -102,7 +102,7 @@ class _CreateTimingState extends State<CreateTiming> {
 									},
 									decoration: InputDecoration(
 										labelText: 'Duration of Class',
-										errorStyle: TextStyle(color: Colors.yellow),
+										errorStyle: TextStyle(color: Colors.red),
 										border: OutlineInputBorder(
 											borderRadius: BorderRadius.circular(5.0))
 									),

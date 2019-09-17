@@ -56,7 +56,7 @@ class _CreateClassState extends State<CreateClass> {
 									},
 									decoration: InputDecoration(
 										labelText: "Subject ID",
-										errorStyle: TextStyle(color: Colors.yellow),
+										errorStyle: TextStyle(color: Colors.red),
 										border: OutlineInputBorder(
 											borderRadius: BorderRadius.circular(5.0))),
 								),
@@ -74,7 +74,7 @@ class _CreateClassState extends State<CreateClass> {
 									},
 									decoration: InputDecoration(
 										labelText: "Subject Name",
-										errorStyle: TextStyle(color: Colors.yellow),
+										errorStyle: TextStyle(color: Colors.red),
 										border: OutlineInputBorder(
 											borderRadius: BorderRadius.circular(5.0))),
 								),
@@ -92,7 +92,7 @@ class _CreateClassState extends State<CreateClass> {
 									},
 									decoration: InputDecoration(
 										labelText: "Class Id",
-										errorStyle: TextStyle(color: Colors.yellow),
+										errorStyle: TextStyle(color: Colors.red),
 										border: OutlineInputBorder(
 											borderRadius: BorderRadius.circular(5.0))),
 								),

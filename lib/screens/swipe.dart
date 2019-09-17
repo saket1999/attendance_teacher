@@ -90,11 +90,12 @@ class _SwipeState extends State<Swipe> {
 				getAttendanceData();
 			},
 			child: Scaffold(
+				backgroundColor: Colors.white70,
 				appBar: AppBar(
 					title: Text('Attendance'),
 				),
 				body: Center(
-					child: _isLoading ? Center(child: SpinKitRing(color: Colors.white)):Container(
+					child: _isLoading ? Center(child: SpinKitRing(color: Colors.black)):Container(
 						height: MediaQuery.of(context).size.height * 0.6,
 						child: TinderSwapCard(
 							orientation: AmassOrientation.BOTTOM,
@@ -221,93 +222,106 @@ class _SwipeState extends State<Swipe> {
 							borderRadius: BorderRadius.circular(12.0)
 						),
 						child: Container(
-							height: 300.0,
-							width: 300.0,
-							child: Column(
-								mainAxisAlignment: MainAxisAlignment.center,
-								children: <Widget>[
-									Card(
-										child: Row(
-											mainAxisAlignment: MainAxisAlignment.center,
-											children: <Widget>[
-												Text(
-													'Date',
-													textScaleFactor: 1.5,
-												),
-												Container(width: 10),
-												Text(
-													date,
-													textScaleFactor: 1.5,
-												)
-											],
-										),
-									),
-									Card(
-										child: Row(
-											mainAxisAlignment: MainAxisAlignment.center,
-											children: <Widget>[
-												Text(
-													'Time',
-													textScaleFactor: 1.5,
-												),
-												Container(width: 10),
-												Text(
-													time,
-													textScaleFactor: 1.5,
-												)
-											],
-										),
-									),
-									Card(
-										child: Row(
-											mainAxisAlignment: MainAxisAlignment.center,
-											children: <Widget>[
-												Text(
-													'Total Strength',
-													textScaleFactor: 1.5,
-												),
-												Container(width: 10),
-												Text(
-													total.toString(),
-													textScaleFactor: 1.5,
-												)
-											],
-										),
-									),
-									Card(
-										child: Row(
-											mainAxisAlignment: MainAxisAlignment.center,
-											children: <Widget>[
-												Text(
-													'Present',
-													textScaleFactor: 1.5,
-												),
-												Container(width: 10),
-												Text(
-													present.toString(),
-													textScaleFactor: 1.5,
-												)
-											],
-										),
-									),
-									Card(
-										child: Row(
-											mainAxisAlignment: MainAxisAlignment.center,
-											children: <Widget>[
-												Text(
-													'Absent',
-													textScaleFactor: 1.5,
-												),
-												Container(width: 10),
-												Text(
-													(total-present).toString(),
-													textScaleFactor: 1.5,
-												)
-											],
-										),
-									),
+							height: 250.0,
+							width: 250.0,
+							child: Padding(
+							  padding: const EdgeInsets.all(20.0),
+							  child: Column(
+							  	mainAxisAlignment: MainAxisAlignment.spaceAround,
+							  	children: <Widget>[
+							  		Row(
+							  			mainAxisAlignment: MainAxisAlignment.start,
+							  			children: <Widget>[
+							  				Expanded(
+							  				  child: Text(
+							  				  	'Date',
+							  				  	textScaleFactor: 1.5,
+							  				  	style: TextStyle(fontWeight: FontWeight.bold),
+							  				  ),
+							  				),
+							  				Expanded(
+							  				  child: Text(
+							  				  	date,
+							  				  	textScaleFactor: 1.5,
+							  				  ),
+							  				)
+							  			],
+							  		),
+							  		Row(
+							  			mainAxisAlignment: MainAxisAlignment.start,
+							  			children: <Widget>[
+							  				Expanded(
+							  					child: Text(
+							  						'Time',
+							  						textScaleFactor: 1.5,
+							  						style: TextStyle(fontWeight: FontWeight.bold),
+							  					),
+							  				),
+							  				Expanded(
+							  					child: Text(
+							  						time.substring(time.indexOf("(")+1, time.indexOf(")")),
+							  						textScaleFactor: 1.5,
+							  					),
+							  				)
+							  			],
+							  		),
+							  		Row(
+							  			mainAxisAlignment: MainAxisAlignment.start,
+							  			children: <Widget>[
+							  				Expanded(
+							  				  child: Text(
+							  				  	'Total',
+							  				  	style: TextStyle(fontWeight: FontWeight.bold),
+							  				  	textScaleFactor: 1.5,
+							  				  ),
+							  				),
+							  				Expanded(
+							  				  child: Text(
+							  				  	total.toString(),
+							  				  	textScaleFactor: 1.5,
+							  				  ),
+							  				)
+							  			],
+							  		),
+							  		Row(
+							  			mainAxisAlignment: MainAxisAlignment.start,
+							  			children: <Widget>[
+							  				Expanded(
+							  				  child: Text(
+							  				  	'Present',
+							  				  	textScaleFactor: 1.5,
+							  				  	style: TextStyle(fontWeight: FontWeight.bold),
+							  				  ),
+							  				),
+							  				Expanded(
+							  					child: Text(
+							  						present.toString(),
+							  						textScaleFactor: 1.5,
+							  					),
+							  				)
+							  			],
+							  		),
+							  		Row(
+							  			mainAxisAlignment: MainAxisAlignment.start,
+							  			children: <Widget>[
+							  				Expanded(
+							  				  child: Text(
+							  				  	'Absent',
+							  				  	textScaleFactor: 1.5,
+							  				  	style: TextStyle(fontWeight: FontWeight.bold),
+							  				  ),
+							  				),
+							  				Expanded(
+							  				  child: Text(
+							  				  	(total-present).toString(),
+							  				  	textScaleFactor: 1.5,
+							  				  ),
+							  				)
+							  			],
+							  		),
 
-								],
+							  	],
+							  ),
 							),
 						),
 					),

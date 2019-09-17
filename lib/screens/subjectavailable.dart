@@ -50,7 +50,6 @@ class _SubjectAvailableState extends State<SubjectAvailable> {
         var subjectName=doc.data['subjectName'].toString();
 
         return Card(
-          color: Colors.black,
           child: ListTile(
             title: Text(subjectName),
             subtitle: Text(subjectId),

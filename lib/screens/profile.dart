@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
 
@@ -108,7 +109,7 @@ class _ProfileState extends State<Profile> {
 										},
 										decoration: InputDecoration(
 											labelText: 'Name',
-											errorStyle: TextStyle(color: Colors.yellow),
+											errorStyle: TextStyle(color: Colors.red),
 											border: OutlineInputBorder(
 												borderRadius: BorderRadius.circular(5.0))),
 									),
@@ -127,7 +128,7 @@ class _ProfileState extends State<Profile> {
 										},
 										decoration: InputDecoration(
 											labelText: 'Password (Leave blank if not Using)',
-											errorStyle: TextStyle(color: Colors.yellow),
+											errorStyle: TextStyle(color: Colors.red),
 											border: OutlineInputBorder(
 												borderRadius: BorderRadius.circular(5.0))),
 									),
@@ -147,7 +148,7 @@ class _ProfileState extends State<Profile> {
 										},
 										decoration: InputDecoration(
 											labelText: 'Confirm Password',
-											errorStyle: TextStyle(color: Colors.yellow),
+											errorStyle: TextStyle(color: Colors.red),
 											border: OutlineInputBorder(
 												borderRadius: BorderRadius.circular(5.0))),
 									),
@@ -166,7 +167,7 @@ class _ProfileState extends State<Profile> {
 										},
 										decoration: InputDecoration(
 											labelText: "Teacher's ID",
-											errorStyle: TextStyle(color: Colors.yellow),
+											errorStyle: TextStyle(color: Colors.red),
 											border: OutlineInputBorder(
 												borderRadius: BorderRadius.circular(5.0))),
 									),
@@ -186,7 +187,7 @@ class _ProfileState extends State<Profile> {
 										},
 										decoration: InputDecoration(
 											labelText: 'Email',
-											errorStyle: TextStyle(color: Colors.yellow),
+											errorStyle: TextStyle(color: Colors.red),
 											border: OutlineInputBorder(
 												borderRadius: BorderRadius.circular(5.0))),
 									),
@@ -207,7 +208,7 @@ class _ProfileState extends State<Profile> {
 										},
 										decoration: InputDecoration(
 											labelText: 'Mobile Number',
-											errorStyle: TextStyle(color: Colors.yellow),
+											errorStyle: TextStyle(color: Colors.red),
 											border: OutlineInputBorder(
 												borderRadius: BorderRadius.circular(5.0))),
 									),
@@ -258,6 +259,7 @@ class _ProfileState extends State<Profile> {
 															FirestoreCRUD.profileUpdate(_teacher,_image ,true).then((bool b){
 																if(b==true){
 																	toast('Updated successfully');
+																	clearSharedPrefs();
 																	Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Login()), (Route<dynamic> route) => false);
 																}
 																else
@@ -310,6 +312,12 @@ class _ProfileState extends State<Profile> {
 				_url = storedUrl;
 			});
 		});
+	}
+
+	void clearSharedPrefs() async {
+		final SharedPreferences prefs = await SharedPreferences.getInstance();
+		prefs.setString('storedObject', '');
+		prefs.setString('storedId', '');
 	}
 }
 

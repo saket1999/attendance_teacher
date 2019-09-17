@@ -27,13 +27,7 @@ class _MailTeachersState extends State<MailTeachers> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Teacher Attendance Manager',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          brightness: Brightness.dark
-      ),
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -82,11 +76,12 @@ class _MailTeachersState extends State<MailTeachers> {
                       Padding(
                         padding: EdgeInsets.all(10.0),
                         child: RaisedButton(
-                            child: _sendingMail?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Send Email'),
+                            child: _sendingMail?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Send Email', style: TextStyle(color: Colors.black),),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.0),
                             ),
-                            elevation: 40.0,
+                            elevation: 10.0,
+                            color: Colors.cyan,
                             onPressed: () {
                               if(_isLoading==true)
                                 toast('Please wait recipients are being fetched');
@@ -103,8 +98,7 @@ class _MailTeachersState extends State<MailTeachers> {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 
   Future<void> func() async {

@@ -42,7 +42,6 @@ class _ClassAvailableState extends State<ClassAvailable> {
         String classDocId=doc.documentID.toString();
 
         return Card(
-          color: Colors.black,
           child: ListTile(
             title: Text(classId),
             onTap: () {

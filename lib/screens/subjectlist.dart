@@ -98,11 +98,11 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
   }
 
 	Widget regularClass() {
-		return _isLoading ? Center(child: SpinKitRing(color: Colors.white)):getTimings();
+		return _isLoading ? Center(child: SpinKitRing(color: Colors.black)):getTimings();
 	}
 
 	Widget extraClass() {
-		return _isLoading ? Center(child: SpinKitRing(color: Colors.white)):getExtraClassTimings();
+		return _isLoading ? Center(child: SpinKitRing(color: Colors.black)):getExtraClassTimings();
 	}
 
 	Widget _bottomButtons() {
@@ -152,7 +152,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 						),
 						children: <Widget>[
 							Card(
-								color: Colors.black12,
+								color: Colors.white70,
 								child: Column(
 									children: <Widget>[
 										ListTile(
@@ -238,7 +238,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 					),
 				  	children: <Widget>[
 				  		Card(
-							color: Colors.black12,
+							color: Colors.white70,
 							child: Column(
 								children: <Widget>[
 									ListTile(

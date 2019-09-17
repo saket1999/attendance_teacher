@@ -1,6 +1,7 @@
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/screens/createclass.dart';
+import 'package:attendance_teacher/screens/login.dart';
 import 'package:attendance_teacher/screens/mailclass.dart';
 import 'package:attendance_teacher/screens/profile.dart';
 import 'package:attendance_teacher/screens/shortatendancelist.dart';
@@ -9,6 +10,7 @@ import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
 
@@ -35,6 +37,8 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+
+    var top = 0.0;
     return Scaffold(
       body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxisScrolled) {
@@ -44,63 +48,76 @@ class _DashboardState extends State<Dashboard> {
                 child: SliverSafeArea(
                   top: false,
                   sliver: SliverAppBar(
-                    expandedHeight: 200.0,
+                    expandedHeight: 170.0,
                     floating: true,
                     pinned: true,
-                    flexibleSpace: FlexibleSpaceBar(
-                        centerTitle: true,
+                    flexibleSpace: LayoutBuilder(
+                      builder: (BuildContext context, BoxConstraints constraints) {
+                        top = constraints.biggest.height;
+                        return FlexibleSpaceBar(
+                            centerTitle: true,
 
-                        title: Text('Dashboard'),
-                        background: Card(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: CircleAvatar(
-                                    radius: 50.0,
-                                    backgroundColor: Colors.blueAccent,
-                                    child: ClipOval(
-                                      child: SizedBox(
-                                        width: 100.0,
-                                        height: 100.0,
-                                        child: _url!=null?Image.network(_url):Image.network(
-                                          "https://d2x5ku95bkycr3.cloudfront.net/App_Themes/Common/images/profile/0_200.png",
-                                          fit: BoxFit.fill,
+                            title: AnimatedOpacity(
+                              duration: Duration(milliseconds: 300),
+                              opacity: top < 90.0 ? 1.0: 0.0,
+                              child: Text('Dashboard'),
+                            ),
+                            background: Card(
+                              elevation: 20.0,
+                              color: Colors.blue,
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: CircleAvatar(
+                                        radius: 50.0,
+                                        backgroundColor: Colors.blueAccent,
+                                        child: ClipOval(
+                                          child: SizedBox(
+                                            width: 100.0,
+                                            height: 100.0,
+                                            child: _url!=null?Image.network(_url):Image.network(
+                                              "https://d2x5ku95bkycr3.cloudfront.net/App_Themes/Common/images/profile/0_200.png",
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
 
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Container(
-                                      child: Text(
-                                        _teacher.name,
-                                        textScaleFactor: 1.5,
-                                      ),
                                     ),
-                                    Container(
-                                      child: Text(
-                                        _teacher.teacherId,
-                                        textScaleFactor: 1.5,
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        _teacher.mobile,
-                                        textScaleFactor: 1.5,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ]
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.all(6.0),
+                                          child: Container(
+                                            child: Text(
+                                              _teacher.name,
+                                              textScaleFactor: 1.5,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(6.0),
+                                          child: Container(
+                                            child: Text(
+                                              _teacher.teacherId,
+                                              textScaleFactor: 1.25,
+                                            ),
+                                          ),
+                                        ),
 
-                          ),
-                        )
-                    ),
+                                      ],
+                                    )
+                                  ]
+
+                              ),
+                            )
+                        );
+                      },
+                    )
                   ),
                 ),
               )
@@ -127,6 +144,7 @@ class _DashboardState extends State<Dashboard> {
       drawer: Drawer(
         child: ListView(
           children: <Widget>[
+            DrawerHeader(child: Icon(Icons.account_circle)),
             ListTile(
               title: Text('Profile'),
               onTap: () {
@@ -138,7 +156,8 @@ class _DashboardState extends State<Dashboard> {
             ListTile(
               title: Text('Sign Out'),
               onTap: () {
-
+                clearSharedPrefs();
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Login()), (Route<dynamic> route) => false);
               },
             )
           ],
@@ -185,7 +204,7 @@ class _DashboardState extends State<Dashboard> {
 //          ),
 //        );
         return Card(
-          color: Colors.black,
+//          color: Colors.black12,
           child: ExpansionTile(
               title: Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -195,10 +214,7 @@ class _DashboardState extends State<Dashboard> {
                   children: <Widget>[
                     Text(
                       subject.subjectName,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      textScaleFactor: 1.2,
                     ),
                     Text(
                       subject.classId,
@@ -260,5 +276,11 @@ class _DashboardState extends State<Dashboard> {
       _url = url;
     });
 
+  }
+
+  void clearSharedPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('storedObject', '');
+    prefs.setString('storedId', '');
   }
 }

@@ -2,12 +2,14 @@ import 'package:attendance_teacher/classes/student.dart';
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/screens/allowprofilechange.dart';
 import 'package:attendance_teacher/screens/classavailable.dart';
+import 'package:attendance_teacher/screens/login.dart';
 import 'package:attendance_teacher/screens/mailteachers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminDashboard extends StatelessWidget{
   const AdminDashboard({Key key}):super(key :key);
@@ -71,6 +73,14 @@ class AdminDashboard extends StatelessWidget{
                   }));
                 },
               ),
+              ListTile(
+                leading: Icon(Icons.subject),
+                title: Text('Sign Out'),
+                onTap: (){
+                  clearSharedPrefs();
+                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Login()), (Route<dynamic> route) => false);
+                  },
+              ),
             ],
           )
         ),
@@ -115,7 +125,7 @@ class AdminDashboard extends StatelessWidget{
         return GestureDetector(
           onTap: () {},
           child: Card(
-            color: Colors.black,
+//            color: Colors.black,
             child: ExpansionTile(
                 title: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -161,12 +171,14 @@ class AdminDashboard extends StatelessWidget{
                           children: <Widget>[
                             RaisedButton(
                               child: Text('Accept'),
+                              color: Colors.white,
                               onPressed: (){
                                 Firestore.instance.collection('teach').document(teacher.documentId).updateData({'verify':1});
                               },
                             ),
                             RaisedButton(
                               child: Text('Reject'),
+                              color: Colors.redAccent,
                               onPressed: (){
                                 Firestore.instance.collection('teach').document(teacher.documentId).updateData({'verify':-1});
                               },
@@ -213,7 +225,7 @@ class AdminDashboard extends StatelessWidget{
         return GestureDetector(
           onTap: () {},
           child: Card(
-            color: Colors.black,
+//            color: Colors.black,
             child: ExpansionTile(
                 title: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -311,5 +323,11 @@ class AdminDashboard extends StatelessWidget{
       );
     });
     return listView;
+  }
+
+  void clearSharedPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('storedObject', '');
+    prefs.setString('storedId', '');
   }
 }
