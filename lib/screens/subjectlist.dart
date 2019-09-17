@@ -132,7 +132,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 			stream: Firestore.instance.collection('teach').document(_teaching.teacherDocumentId).collection('subject').document(_teaching.documentId).collection('extraClass').snapshots(),
 			builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 				if (!snapshot.hasData)
-					return Text('Loading');
+					return Center(child:Loading(indicator: BallPulseIndicator(), size: 20.0));
 				return getExtraClassTimingsList(snapshot);
 			}
 		);
@@ -217,7 +217,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 		stream: Firestore.instance.collection('teach').document(_teaching.teacherDocumentId).collection('subject').document(_teaching.documentId).collection('timings').snapshots(),
 		builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 			if(!snapshot.hasData)
-				return Text('Loading');
+				return Center(child:Loading(indicator: BallPulseIndicator(), size: 20.0));
 			return getTimingsList(snapshot);
 		},
 	);

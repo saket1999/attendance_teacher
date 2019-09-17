@@ -10,6 +10,8 @@ import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:loading/indicator/ball_pulse_indicator.dart';
+import 'package:loading/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
@@ -96,6 +98,9 @@ class _DashboardState extends State<Dashboard> {
                                             child: Text(
                                               _teacher.name,
                                               textScaleFactor: 1.5,
+                                              style: TextStyle(
+                                                color: Colors.white
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -105,6 +110,9 @@ class _DashboardState extends State<Dashboard> {
                                             child: Text(
                                               _teacher.teacherId,
                                               textScaleFactor: 1.25,
+                                              style: TextStyle(
+                                                  color: Colors.white
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -171,7 +179,7 @@ class _DashboardState extends State<Dashboard> {
       stream: Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if(!snapshot.hasData)
-          return Text('Loading');
+          return Center(child:Loading(indicator: BallPulseIndicator(), size: 20.0));
         return getSubjectList(snapshot);
       },
     );
