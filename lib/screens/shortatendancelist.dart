@@ -105,7 +105,7 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
             title: Text(student.data['name']),
             subtitle: Text(student.data['regNo']),
             trailing: RaisedButton(
-              child: Text('Allow at '+percentage.toInt().toString()+' %'),
+              child: Text('Allow at '+percentage.toInt().toString()+'%'),
               onPressed: (){
                 print(b.toString());
                 if(b) {

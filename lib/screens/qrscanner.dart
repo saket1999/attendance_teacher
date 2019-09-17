@@ -54,12 +54,12 @@ class _QrScannerState extends State<QrScanner> {
 
 
 	var now = DateTime.now();
-	var date,time;
+	String date,time;
 
 	String lastName;
 	String lastRegNo;
 	String lastOutcome;
-	
+
 	void initState() {
 		super.initState();
 
@@ -89,7 +89,7 @@ class _QrScannerState extends State<QrScanner> {
 	Widget build(BuildContext context) {
 		return WillPopScope(
 			child: Scaffold(
-				body: _isLoading ? Center(child: SpinKitRing(color: Colors.white)):Column(
+				body: _isLoading ? Center(child: SpinKitRing(color: Colors.black)):Column(
 					children: <Widget>[
 						Expanded(
 							flex: 5,
@@ -107,34 +107,27 @@ class _QrScannerState extends State<QrScanner> {
 						),
 						Expanded(
 							child: Padding(
-							  padding: const EdgeInsets.all(8.0),
-							  child: lastName == null?Center(child: Text('Start taking Attendance', textScaleFactor: 2,)) : Center(
-							  	child: Column(
-							  		children: <Widget>[
-										Padding(
-										  padding: const EdgeInsets.all(6.0),
-										  child: Text(
-										  	'Name - '+lastName,
-										  	textScaleFactor: 2.0,
-										  ),
-										),
-							  			Padding(
-							  			  padding: const EdgeInsets.all(6.0),
-							  			  child: Text(
-											'RegNo - '+lastRegNo,
-											textScaleFactor: 1.5,
-										),
-							  			),
-							  			Padding(
-							  			  padding: const EdgeInsets.all(6.0),
-							  			  child: Text(
-											'Outcome - '+lastOutcome,
-											textScaleFactor: 1.5,
-										),
-							  			)
-							  		],
-							  	),
-							  ),
+								padding: const EdgeInsets.all(8.0),
+								child: lastName == null?Center(child: Text('Start taking Attendance', textScaleFactor: 2,)) : Center(
+									child: Column(
+										crossAxisAlignment: CrossAxisAlignment.center,
+										mainAxisAlignment: MainAxisAlignment.spaceAround,
+										children: <Widget>[
+											Text(
+												'Name - '+lastName,
+												textScaleFactor: 2.0,
+											),
+											Text(
+												'RegNo - '+lastRegNo,
+												textScaleFactor: 1.5,
+											),
+											Text(
+												'Outcome - '+lastOutcome,
+												textScaleFactor: 1.5,
+											),
+										],
+									),
+								),
 							),
 						),
 					],
@@ -142,9 +135,9 @@ class _QrScannerState extends State<QrScanner> {
 			),
 			onWillPop: _isLoading? () {} : () {
 //				Navigator.pop(context);
-			setState(() {
-			  _isLoading = true;
-			});
+				setState(() {
+					_isLoading = true;
+				});
 				getAttendanceData();
 //				attendanceDialog();
 			},
@@ -187,93 +180,106 @@ class _QrScannerState extends State<QrScanner> {
 							borderRadius: BorderRadius.circular(12.0)
 						),
 						child: Container(
-							height: 300.0,
-							width: 300.0,
-							child: Column(
-								mainAxisAlignment: MainAxisAlignment.center,
-								children: <Widget>[
-									Card(
-										child: Row(
-											mainAxisAlignment: MainAxisAlignment.center,
+							height: 250.0,
+							width: 250.0,
+							child: Padding(
+								padding: const EdgeInsets.all(20.0),
+								child: Column(
+									mainAxisAlignment: MainAxisAlignment.spaceAround,
+									children: <Widget>[
+										Row(
+											mainAxisAlignment: MainAxisAlignment.start,
 											children: <Widget>[
-												Text(
-													'Date',
-													textScaleFactor: 1.5,
+												Expanded(
+													child: Text(
+														'Date',
+														textScaleFactor: 1.5,
+														style: TextStyle(fontWeight: FontWeight.bold),
+													),
 												),
-												Container(width: 10),
-												Text(
-													date,
-													textScaleFactor: 1.5,
+												Expanded(
+													child: Text(
+														date,
+														textScaleFactor: 1.5,
+													),
 												)
 											],
 										),
-									),
-									Card(
-										child: Row(
-											mainAxisAlignment: MainAxisAlignment.center,
+										Row(
+											mainAxisAlignment: MainAxisAlignment.start,
 											children: <Widget>[
-												Text(
-													'Time',
-													textScaleFactor: 1.5,
+												Expanded(
+													child: Text(
+														'Time',
+														textScaleFactor: 1.5,
+														style: TextStyle(fontWeight: FontWeight.bold),
+													),
 												),
-												Container(width: 10),
-												Text(
-													time,
-													textScaleFactor: 1.5,
+												Expanded(
+													child: Text(
+														time.substring(time.indexOf("(")+1, time.indexOf(")")),
+														textScaleFactor: 1.5,
+													),
 												)
 											],
 										),
-									),
-									Card(
-										child: Row(
-											mainAxisAlignment: MainAxisAlignment.center,
+										Row(
+											mainAxisAlignment: MainAxisAlignment.start,
 											children: <Widget>[
-												Text(
-													'Total Strength',
-													textScaleFactor: 1.5,
+												Expanded(
+													child: Text(
+														'Total',
+														style: TextStyle(fontWeight: FontWeight.bold),
+														textScaleFactor: 1.5,
+													),
 												),
-												Container(width: 10),
-												Text(
-													total.toString(),
-													textScaleFactor: 1.5,
+												Expanded(
+													child: Text(
+														total.toString(),
+														textScaleFactor: 1.5,
+													),
 												)
 											],
 										),
-									),
-									Card(
-										child: Row(
-											mainAxisAlignment: MainAxisAlignment.center,
+										Row(
+											mainAxisAlignment: MainAxisAlignment.start,
 											children: <Widget>[
-												Text(
-													'Present',
-													textScaleFactor: 1.5,
+												Expanded(
+													child: Text(
+														'Present',
+														textScaleFactor: 1.5,
+														style: TextStyle(fontWeight: FontWeight.bold),
+													),
 												),
-												Container(width: 10),
-												Text(
-													present.toString(),
-													textScaleFactor: 1.5,
+												Expanded(
+													child: Text(
+														present.toString(),
+														textScaleFactor: 1.5,
+													),
 												)
 											],
 										),
-									),
-									Card(
-										child: Row(
-											mainAxisAlignment: MainAxisAlignment.center,
+										Row(
+											mainAxisAlignment: MainAxisAlignment.start,
 											children: <Widget>[
-												Text(
-													'Absent',
-													textScaleFactor: 1.5,
+												Expanded(
+													child: Text(
+														'Absent',
+														textScaleFactor: 1.5,
+														style: TextStyle(fontWeight: FontWeight.bold),
+													),
 												),
-												Container(width: 10),
-												Text(
-													(total-present).toString(),
-													textScaleFactor: 1.5,
+												Expanded(
+													child: Text(
+														(total-present).toString(),
+														textScaleFactor: 1.5,
+													),
 												)
 											],
 										),
-									),
 
-								],
+									],
+								),
 							),
 						),
 					),

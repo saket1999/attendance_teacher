@@ -63,6 +63,7 @@ class _DashboardState extends State<Dashboard> {
                               child: Text('Dashboard'),
                             ),
                             background: Card(
+                              elevation: 20.0,
                               color: Colors.blue,
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
