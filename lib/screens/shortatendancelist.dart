@@ -1,6 +1,7 @@
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/services/firestorecrud.dart';
+import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mailer/flutter_mailer.dart';
@@ -115,6 +116,7 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
               onPressed: (){
                 print(b.toString());
                 if(b) {
+                  toast('Allowed '+student.data['regNo']);
                   Firestore.instance.collection('allow').add({
                     'regNo': student.data['regNo'],
                     'teacherId': _teacher.teacherId,

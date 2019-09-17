@@ -61,10 +61,10 @@ class _EditAttendanceState extends State<EditAttendance> {
 									},
 									validator: (String value) {
 										if(value.length != 8)
-											return 'Enter valid Registeration Number';
+											return 'Enter valid Registration Number';
 									},
 									decoration: InputDecoration(
-										labelText: 'Registeration Number',
+										labelText: 'Registration Number',
 										errorStyle: TextStyle(color: Colors.yellow),
 										border: OutlineInputBorder(
 											borderRadius: BorderRadius.circular(5.0))

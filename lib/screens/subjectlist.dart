@@ -5,6 +5,7 @@ import 'package:attendance_teacher/classes/timings.dart';
 import 'package:attendance_teacher/screens/create_extraclass.dart';
 import 'package:attendance_teacher/screens/createtiming.dart';
 import 'package:attendance_teacher/screens/editattendance.dart';
+import 'package:attendance_teacher/screens/editextraclassattendance.dart';
 import 'package:attendance_teacher/screens/qrscanner.dart';
 import 'package:attendance_teacher/screens/swipe.dart';
 import 'package:attendance_teacher/services/firestorecrud.dart';
@@ -192,6 +193,9 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 										ListTile(
 											title: Text('Edit Attendance'),
 											onTap: () {
+												Navigator.push(context, MaterialPageRoute(builder: (context) {
+													return EditExtraClassAttendance(_teacher, _teaching, timings, doc['date']);
+												}));
 
 											},
 										)

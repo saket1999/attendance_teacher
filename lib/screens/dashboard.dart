@@ -112,8 +112,10 @@ class _DashboardState extends State<Dashboard> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          if(_teacher.verify!=1)
-            toast('Your profile is not verified.');
+          if(_teacher.verify==0)
+            toast('Your profile is not yet verified.');
+          else if(_teacher.verify==-1)
+            toast('Please correct and update profile');
           else
 			Navigator.push(context, MaterialPageRoute(builder: (context) {
 				return CreateClass(_teacher);
