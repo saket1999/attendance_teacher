@@ -1,8 +1,9 @@
+/*This screen allows teacher to edit regular class's attendance of a student*/
+
 import 'package:attendance_teacher/classes/student.dart';
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/classes/timings.dart';
-import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,15 @@ class _EditAttendanceState extends State<EditAttendance> {
 	DateTime dateTime = DateTime.now();
 	bool _isLoading=false;
 	Widget studentPresentAbsent=Container();//This widget allows you to mark absent or present
+
+	/*UI:
+	*	Body:
+	* 	Form:
+	* 		Registration Number TextFormField
+	* 		Date TextFormField
+	* 		Search Button
+	* 	ListView:
+	* 		Displays student to edit attendance*/
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +150,7 @@ class _EditAttendanceState extends State<EditAttendance> {
 	);
   }
 
+  //This method looks whether the student was present or absent that day
   Future<void> searchStudentPresentAbsent() async {
   	var student=await Firestore.instance.collection('stud').where('regNo',isEqualTo: regNo).getDocuments();
   	if(student.documents.length==0){
@@ -168,6 +179,7 @@ class _EditAttendanceState extends State<EditAttendance> {
   	
 	}
 
+	//This returns a card to mark student present or absent
 	Widget simpleCard(Student student,String subjectId,String attendanceId){
   	return Card(
 			color: Colors.black,
@@ -225,6 +237,8 @@ class _EditAttendanceState extends State<EditAttendance> {
 			),
 		);
 	}
+
+	//This returns a card for a student who is marked present
 	void refreshSimpleCard(Student student){
   	studentPresentAbsent=Card(
 			color: Colors.black,

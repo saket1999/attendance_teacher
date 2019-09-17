@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/screens/login.dart';
 import 'package:attendance_teacher/services/firestorecrud.dart';
@@ -9,7 +8,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';

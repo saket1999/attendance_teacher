@@ -1,3 +1,5 @@
+/*This screen shows the dashboard to the user after login*/
+
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/screens/createclass.dart';
@@ -226,11 +228,24 @@ class _DashboardState extends State<Dashboard> {
                       subject.subjectName,
                       textScaleFactor: 1.2,
                     ),
-                    Text(
-                      subject.classId,
-                      style: TextStyle(
-                        fontSize: 15.0,
-                      ),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          subject.subjectId,
+                          style: TextStyle(
+                            fontSize: 15.0,
+                          ),
+                        ),
+                        Container(
+                          width: 20.0,
+                        ),
+                        Text(
+                          subject.classId,
+                          style: TextStyle(
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

@@ -129,7 +129,6 @@ class _MailClassState extends State<MailClass> {
     return;
   }
   Future<void> getRecipients() async {
-//    QuerySnapshot docs=await Firestore.instance.collection('stud').where('classId',isEqualTo: _teaching.classId).getDocuments();
     QuerySnapshot docs=await Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(_teaching.documentId).collection('studentsEnrolled').getDocuments();
 
     for(int i=0;i<docs.documents.length;i++) {

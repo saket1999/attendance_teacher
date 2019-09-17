@@ -1,3 +1,6 @@
+/*This screen shows the list of students whose attendance is less than then the goal(75%). The students are listed according to the attendance in a particular subject of a particular class.
+* The Admin can notify the students with email.*/
+
 import 'package:attendance_teacher/classes/student.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +32,19 @@ class _StudentAvailableState extends State<StudentAvailable> {
   _StudentAvailableState(this.classId,this.subjectId,this.subjectName);
 
 
+
+  //shortAttendanceListGenerator is called before the activity is created
   void initState() {
     super.initState();
     shortAttendanceListGenerator();
   }
+
+  /*UI Part:
+  *   AppBar:
+  *     Text: Subject of ClassId
+  *     Button: Mail every student
+  *   Body:
+  *     ListView of Students with short attendance*/
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +70,7 @@ class _StudentAvailableState extends State<StudentAvailable> {
 
   }
 
+  //An async method to create a ListView of Students with short attendance
   Future<void> shortAttendanceListGenerator() async {
     setState(() {
       _isLoading=true;
@@ -98,14 +111,12 @@ class _StudentAvailableState extends State<StudentAvailable> {
         ));
         recipients.add(student.email);
       }
-
     }
-
     students=ListView(children: listArray);
-
     setState(() {_isLoading=false;});
   }
 
+  //This method sends an email to all the listed students
   Future<void> sendMail() async {
     setState(() {
       _isLoading=true;

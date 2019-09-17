@@ -1,6 +1,5 @@
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
-import 'package:attendance_teacher/services/firestorecrud.dart';
 import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +76,6 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
       var studentDocId=studentDocumentIds.documents[i].data['docId'];
       var student=await Firestore.instance.collection('stud').document(studentDocId).get();
       var subject=await Firestore.instance.collection('stud').document(studentDocId).collection('subject').where('subjectId',isEqualTo: _teaching.subjectId).where('subjectName',isEqualTo: _teaching.subjectName).where('teacherId',isEqualTo: _teacher.teacherId).getDocuments();
-//      print(studentDocId+' '+_teaching.subjectName+'  '+_teaching.subjectId+' '+_teacher.teacherId+' '+'  '+subject.documents.length.toString());
       if(subject.documents.length==0)
         continue;
 
@@ -110,7 +108,7 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
               onPressed: (){
                 print(b.toString());
                 if(b) {
-                  toast('Allowed '+student.data['regNo']);
+                  toast('Allowed '+student.data['name']);
                   Firestore.instance.collection('allow').add({
                     'regNo': student.data['regNo'],
                     'teacherId': _teacher.teacherId,
@@ -118,6 +116,8 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
                   });
                   b=false;
                 }
+                else
+                  toast('Already allowed'+student.data['name']);
               },
             ),
           ),
@@ -131,6 +131,8 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
     setState(() {});
   }
 
+
+  //This method sends mail to students notifying them about short attendance
   Future<void> sendMail() async {
     setState(() {
       _isLoading=true;

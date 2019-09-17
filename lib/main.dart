@@ -15,12 +15,12 @@
 *
 * Language: Dart
 * IDE: Android Studio
-* Database: Firebase Firestore
-*
-* Note:  Firebase server currently has 8(eight) cloud functions triggered on different activities of the app of Firestore*/
+* Database: Firebase Firestore*/
 
-
-/*isLoading and sendingMail are standard boolean variable used throughout project to set particular screen to loading mode*/
+/*Note: Method description is provided just BEFORE method declaration/definition*/
+/*Note:  Firebase server currently has 8 (eight) cloud functions triggered on different activities of the app which helps in reducing load of client side app and keeps data consistent in all cases*/
+/*Note: isLoading and sendingMail are standard boolean variable used throughout project to set particular screen to loading mode*/
+/*Note: Each screen's UI is briefly described before the build method*/
 
 
 import 'dart:convert';

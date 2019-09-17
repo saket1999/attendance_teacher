@@ -1,3 +1,4 @@
+/*This screen is called when Admin wants to see the short attendance list. Hence this screen lists all the available classes to the Admin*/
 import 'package:attendance_teacher/screens/subjectavailable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,12 @@ class ClassAvailable extends StatefulWidget {
   _ClassAvailableState createState() => _ClassAvailableState();
 }
 
+
+/*UI Part:
+* Appbar:
+*    Text: Available Classes
+* Body:
+*   ListView of Classes*/
 class _ClassAvailableState extends State<ClassAvailable> {
   @override
   Widget build(BuildContext context) {
@@ -23,6 +30,7 @@ class _ClassAvailableState extends State<ClassAvailable> {
 
 
 
+  //Stream builder which gets the snapshot of all classes available
   Widget getClasses() {
     return StreamBuilder<QuerySnapshot> (
       stream: Firestore.instance.collection('classes').snapshots(),
@@ -34,6 +42,7 @@ class _ClassAvailableState extends State<ClassAvailable> {
     );
   }
 
+  //This method generates and returns a ListView of classes available to the user
   getClassesList(AsyncSnapshot<QuerySnapshot> snapshot) {
 
     var listView = ListView.builder(itemCount: snapshot.data.documents.length,itemBuilder: (context, index) {
@@ -56,8 +65,6 @@ class _ClassAvailableState extends State<ClassAvailable> {
       return GestureDetector();
 
     });
-
-//
     return listView;
   }
 }

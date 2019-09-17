@@ -1,4 +1,4 @@
-import 'dart:math';
+/*This screen helps in creating a particular timing of a particular regular class*/
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/classes/timings.dart';
 import 'package:attendance_teacher/services/firestorecrud.dart';
@@ -31,10 +31,21 @@ class _CreateTimingState extends State<CreateTiming> {
 	var dayList = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 	var _currentDaySelected = '';
 
+
+	//By default the initial day is set to dayList[0]
 	void initState() {
 		super.initState();
 		_currentDaySelected = dayList[0];
 	}
+
+	/*UI Part:
+	* Appbar:
+	* 	Text: Add Timings
+	* Body:
+	* 	Select Day
+	* 	Select Time
+	* 	Enter Duration
+	* 	Submit Button*/
 
 	@override
   Widget build(BuildContext context) {
@@ -156,6 +167,7 @@ class _CreateTimingState extends State<CreateTiming> {
 	);
   }
 
+  //Time Selector
   Future<Null> selectTime(BuildContext context) async {
 		final TimeOfDay picked = await showTimePicker(
 			context: context,
