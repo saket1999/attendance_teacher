@@ -1,9 +1,11 @@
-/*This screen helps in creating a particular timing of a particular regular class*/
+import 'dart:math';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/classes/timings.dart';
 import 'package:attendance_teacher/services/firestorecrud.dart';
 import 'package:attendance_teacher/services/toast.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 
@@ -26,26 +28,16 @@ class _CreateTimingState extends State<CreateTiming> {
 	bool _isLoading = false;
 
 	var _createForm = GlobalKey<FormState>();
-	TimeOfDay _time = TimeOfDay.now();
+	String _time;
+	final format = DateFormat("HH:mm");
 
 	var dayList = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 	var _currentDaySelected = '';
 
-
-	//By default the initial day is set to dayList[0]
 	void initState() {
 		super.initState();
 		_currentDaySelected = dayList[0];
 	}
-
-	/*UI Part:
-	* Appbar:
-	* 	Text: Add Timings
-	* Body:
-	* 	Select Day
-	* 	Select Time
-	* 	Enter Duration
-	* 	Submit Button*/
 
 	@override
   Widget build(BuildContext context) {
@@ -93,12 +85,31 @@ class _CreateTimingState extends State<CreateTiming> {
 
 							Padding(
 								padding: EdgeInsets.all(10.0),
-								child: RaisedButton(
-									child: Text('Choose Time'),
-									onPressed: () {
-										selectTime(context);
+								child: DateTimeField(
+									onSaved: (value) {
+										_time = 'TimeOfDay('+value.hour.toString().padLeft(2, '0')+':'+value.minute.toString().padLeft(2, '0')+')';
 									},
-								),
+									validator: (value) {
+										if (value == null)
+										  return 'Enter Time';
+										else
+											return null;
+									},
+									format: format,
+									decoration: InputDecoration(
+										labelText: 'Time',
+										errorStyle: TextStyle(color: Colors.red),
+										border: OutlineInputBorder(
+											borderRadius: BorderRadius.circular(5.0))
+									),
+									onShowPicker: (context, currentValue) async {
+										final time = await showTimePicker(
+											context: context,
+											initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+										);
+										return DateTimeField.convert(time);
+									},
+								)
 							),
 							Padding(
 								padding: EdgeInsets.all(10.0),
@@ -110,6 +121,8 @@ class _CreateTimingState extends State<CreateTiming> {
 									validator: (String value) {
 										if(value.length == 0)
 											return "Enter Duration";
+										else
+											return null;
 									},
 									decoration: InputDecoration(
 										labelText: 'Duration of Class',
@@ -137,6 +150,7 @@ class _CreateTimingState extends State<CreateTiming> {
 													});
 
 													_createForm.currentState.save();
+													_timings.start = _time;
 
 													FirestoreCRUD.createTime(_teaching, _timings ).then((bool b) {
 														if(b == true) {
@@ -167,17 +181,16 @@ class _CreateTimingState extends State<CreateTiming> {
 	);
   }
 
-  //Time Selector
-  Future<Null> selectTime(BuildContext context) async {
-		final TimeOfDay picked = await showTimePicker(
-			context: context,
-			initialTime: _time
-		);
-		setState(() {
-			if(picked!=null) {
-				_time = picked;
-				_timings.start = _time.toString();
-			}
-		});
-  }
+//  Future<Null> selectTime(BuildContext context) async {
+//		final TimeOfDay picked = await showTimePicker(
+//			context: context,
+//			initialTime: _time
+//		);
+//		setState(() {
+//			if(picked!=null) {
+//				_time = picked;
+//				_timings.start = _time.toString();
+//			}
+//		});
+//  }
 }

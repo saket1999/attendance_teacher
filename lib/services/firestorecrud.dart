@@ -6,6 +6,7 @@ import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/classes/timings.dart';
 import 'package:attendance_teacher/screens/adminDashboard.dart';
 import 'package:attendance_teacher/screens/dashboard.dart';
+import 'package:attendance_teacher/services/functions.dart';
 import 'package:attendance_teacher/services/password.dart';
 import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mailer/flutter_mailer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcase_widget.dart';
 
 class FirestoreCRUD{
 	//  This function looks for the document for login
@@ -25,7 +27,7 @@ class FirestoreCRUD{
 
 
 	//This function is called for login
-	static Future<bool> login(BuildContext context,Teacher teacher,inputPass) async {
+	static Future<bool> login(BuildContext context,Teacher teacher,inputPass, bool getHelp) async {
 
 		Teacher incoming = Teacher.blank();
 
@@ -39,7 +41,7 @@ class FirestoreCRUD{
 				if(teacher.verify==404)
 					Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => AdminDashboard()), (Route<dynamic> route) => false);
 				else
-					Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Dashboard(teacher)), (Route<dynamic> route) => false);
+					Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => ShowCaseWidget(child: Dashboard(teacher, getHelp))), (Route<dynamic> route) => false);
 
 			}
 			catch(e){
@@ -131,7 +133,7 @@ class FirestoreCRUD{
 			recipients.add(student.data['email']);
 		}
 		String subject='Extra Class of '+teaching.subjectName;
-		String body='An extra class is scheduled on\n\n'+'Date: '+date+'\nStart Time: '+timings.start+'\nDuration: '+timings.duration+' hrs\nSubject: '+teaching.subjectName+'\n\n';
+		String body='An extra class is scheduled on\n\n'+'Date: '+date+'\nStart Time: '+timeConverter(timings.start)+'\nDuration: '+timings.duration+' hrs\nSubject: '+teaching.subjectName+'\n\n';
 		if(recipients.length>0)
 			sendEmail(subject,body,recipients);
 		return true;
@@ -146,7 +148,7 @@ class FirestoreCRUD{
 			recipients.add(student.data['email']);
 		}
 		String subject=teaching.subjectName+' class cancelled';
-		String body='The following scheduled class has been cancelled.\n\n'+'Day: '+timings.day+'\nStart Time: '+timings.start+'\nDuration: '+timings.duration+' hrs\nSubject: '+teaching.subjectName+'\n\nTecher in Charge: '+teacher.name;
+		String body='The following scheduled class has been cancelled.\n\n'+'Day: '+timings.day+'\nStart Time: '+timeConverter(timings.start)+'\nDuration: '+timings.duration+' hrs\nSubject: '+teaching.subjectName+'\n\nTecher in Charge: '+teacher.name;
 		if(recipients.length>0)
 			sendEmail(subject,body,recipients);
 		return;

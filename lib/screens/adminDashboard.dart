@@ -93,7 +93,7 @@ class AdminDashboard extends StatelessWidget{
                 title: Text('Sign Out'),
                 onTap: (){
                   clearSharedPrefs();
-                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Login()), (Route<dynamic> route) => false);
+                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Login(false)), (Route<dynamic> route) => false);
                   },
               ),
             ],
