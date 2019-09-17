@@ -6,6 +6,7 @@ import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/classes/timings.dart';
 import 'package:attendance_teacher/screens/adminDashboard.dart';
 import 'package:attendance_teacher/screens/dashboard.dart';
+import 'package:attendance_teacher/services/functions.dart';
 import 'package:attendance_teacher/services/password.dart';
 import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -131,7 +132,7 @@ class FirestoreCRUD{
 			recipients.add(student.data['email']);
 		}
 		String subject='Extra Class of '+teaching.subjectName;
-		String body='An extra class is scheduled on\n\n'+'Date: '+date+'\nStart Time: '+timings.start+'\nDuration: '+timings.duration+' hrs\nSubject: '+teaching.subjectName+'\n\n';
+		String body='An extra class is scheduled on\n\n'+'Date: '+date+'\nStart Time: '+timeConverter(timings.start)+'\nDuration: '+timings.duration+' hrs\nSubject: '+teaching.subjectName+'\n\n';
 		if(recipients.length>0)
 			sendEmail(subject,body,recipients);
 		return true;
@@ -146,7 +147,7 @@ class FirestoreCRUD{
 			recipients.add(student.data['email']);
 		}
 		String subject=teaching.subjectName+' class cancelled';
-		String body='The following scheduled class has been cancelled.\n\n'+'Day: '+timings.day+'\nStart Time: '+timings.start+'\nDuration: '+timings.duration+' hrs\nSubject: '+teaching.subjectName+'\n\nTecher in Charge: '+teacher.name;
+		String body='The following scheduled class has been cancelled.\n\n'+'Day: '+timings.day+'\nStart Time: '+timeConverter(timings.start)+'\nDuration: '+timings.duration+' hrs\nSubject: '+teaching.subjectName+'\n\nTecher in Charge: '+teacher.name;
 		if(recipients.length>0)
 			sendEmail(subject,body,recipients);
 		return;

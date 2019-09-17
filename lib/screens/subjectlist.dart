@@ -9,6 +9,7 @@ import 'package:attendance_teacher/screens/editextraclassattendance.dart';
 import 'package:attendance_teacher/screens/qrscanner.dart';
 import 'package:attendance_teacher/screens/swipe.dart';
 import 'package:attendance_teacher/services/firestorecrud.dart';
+import 'package:attendance_teacher/services/functions.dart';
 import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -148,7 +149,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 						key: GlobalKey(),
 						title: ListTile(
 							title: Text(doc['date']),
-							subtitle: Text(doc['start']+' '+doc['duration']+' hours'),
+							subtitle: Text('Time: '+timeConverter(doc['start'])+'   Duration: '+doc['duration']+' hours'),
 						),
 						children: <Widget>[
 							Card(
@@ -234,7 +235,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 					  key: GlobalKey(),
 				  	title: ListTile(
 						title: Text(timings.day),
-						subtitle: Text(timings.start+' : '+timings.duration+' hours'),
+						subtitle: Text('Time: '+timeConverter(timings.start)+'   Duration: '+timings.duration+' hours'),
 					),
 				  	children: <Widget>[
 				  		Card(
@@ -330,6 +331,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 		  }
 		  toast('Task Completed Successfully');
 	  });
+
   }
 
 	void getDataSwipePage(Timings timings) async {
