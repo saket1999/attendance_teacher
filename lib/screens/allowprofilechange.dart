@@ -1,10 +1,7 @@
 import 'package:attendance_teacher/classes/student.dart';
 import 'package:attendance_teacher/classes/teacher.dart';
-import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:loading/indicator/ball_pulse_indicator.dart';
-import 'package:loading/loading.dart';
 
 class AllowProfileChange extends StatefulWidget {
   @override
@@ -19,6 +16,7 @@ class _AllowProfileChangeState extends State<AllowProfileChange> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.cyan,
           title: Text('Allow profile change'),
         ),
         body: ListView(

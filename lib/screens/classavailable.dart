@@ -14,6 +14,7 @@ class _ClassAvailableState extends State<ClassAvailable> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.cyan,
           title: Text('Available Classes'),
         ),
         body: getClasses(),

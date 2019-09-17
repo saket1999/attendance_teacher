@@ -38,6 +38,7 @@ class _StudentAvailableState extends State<StudentAvailable> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.cyan,
           bottom: PreferredSize(
             preferredSize: Size(100.0,40.0),
             child: RaisedButton(

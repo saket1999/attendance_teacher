@@ -23,6 +23,7 @@ class _SubjectAvailableState extends State<SubjectAvailable> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.cyan,
           title: Text('Subjects in '+classId),
         ),
         body: getSubjects(),

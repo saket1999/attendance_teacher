@@ -166,7 +166,7 @@ class FirestoreCRUD{
 
 	//method to upload pic to firebase storage
 	static Future uploadPic(Teacher student,File _image) async {
-		String fileName = student.teacherId;
+		String fileName = 'avatar_'+student.teacherId;
 		StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
 		StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
 		StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
