@@ -15,6 +15,7 @@ The student side application to view realtime attendance in various subjects. Th
 - Teacher can edit profile
 - Teacher can view created classes in realtime
 - Teacher can take/update attendance in realtime
+- Teacher can generate a list of students falling short of attendance
 
 ### Contributors
 - [Harshit Agarwall](https://github.com/harshwall)
