@@ -11,6 +11,7 @@ import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -219,15 +220,18 @@ class DashboardState extends State<Dashboard> {
                 child: Icon(Icons.account_circle)
             ),
             ListTile(
-              title: Text('Profile'),
+              leading: Icon(Icons.contact_mail),
+              title: Text('Profile',textScaleFactor: 1.1,),
               onTap: () {
+                prefix0.Navigator.pop(context);
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return Profile(_teacher);
                 }));
               },
             ),
             ListTile(
-              title: Text('Sign Out'),
+              leading: Icon(Icons.exit_to_app),
+              title: Text('Sign Out',textScaleFactor: 1.1,),
               onTap: () {
                 clearSharedPrefs();
                 Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Login(false)), (Route<dynamic> route) => false);
@@ -275,11 +279,24 @@ class DashboardState extends State<Dashboard> {
                       subject.subjectName,
                       textScaleFactor: 1.2,
                     ),
-                    Text(
-                      subject.classId,
-                      style: TextStyle(
-                        fontSize: 15.0,
-                      ),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          subject.subjectId,
+                          style: TextStyle(
+                            fontSize: 15.0,
+                          ),
+                        ),
+                        Container(
+                          width: 20.0,
+                        ),
+                        Text(
+                          subject.classId,
+                          style: TextStyle(
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

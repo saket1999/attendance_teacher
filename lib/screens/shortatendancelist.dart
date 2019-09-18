@@ -104,34 +104,9 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
       if(percentage<75) {
         cardData=CardData(student.data['name'],student.data['regNo'],'Allow at '+percentage.toInt().toString()+'%');
         cardDataList.add(cardData);
-        bool b=true;
-        listArray.add(Card(
-          child: ListTile(
-            title: Text(student.data['name']),
-            subtitle: Text(student.data['regNo']),
-            trailing: RaisedButton(
-              child: Text('Allow at '+percentage.toInt().toString()+'%'),
-              onPressed: (){
-                print(b.toString());
-                if(b) {
-                  toast('Allowed '+student.data['name']);
-                  Firestore.instance.collection('allow').add({
-                    'regNo': student.data['regNo'],
-                    'teacherId': _teacher.teacherId,
-                    'subjectId': _teaching.subjectId
-                  });
-                  b=false;
-                }
-                else
-                  toast('Already allowed'+student.data['name']);
-              },
-            ),
-          ),
-        ));
         recipients.add(student.data['email']);
       }
     }
-//    shortAttendanceList=ListView(children: listArray);
     cardDataList.sort((a,b){
       return b.title.compareTo(a.title);
     });
@@ -155,7 +130,6 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
               }
               else
                 toast('Already allowed '+cardDataList[index].title);
-              setState(() {});
             },
           ),
         ),

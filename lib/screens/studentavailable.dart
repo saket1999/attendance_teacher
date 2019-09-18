@@ -77,7 +77,6 @@ class _StudentAvailableState extends State<StudentAvailable> {
       _isLoading=true;
     });
     students=ListView();
-//    List<Widget> listArray=[];
     List<CardData> cardDataList=[];
     CardData cardData=CardData.blank();
     var studentDocuments=await Firestore.instance.collection('stud').where('classId',isEqualTo: classId).getDocuments();
@@ -107,17 +106,9 @@ class _StudentAvailableState extends State<StudentAvailable> {
       if(percentage<75.0){
         cardData=CardData(student.name,student.regNo,percentage.toInt().toString()+'%');
         cardDataList.add(cardData);
-//        listArray.add(Card(
-//          child: ListTile(
-//            title: Text(student.name),
-//            subtitle: Text(student.regNo),
-//            trailing: Text(percentage.toInt().toString()+'%'),
-//          ),
-//        ));
         recipients.add(student.email);
       }
     }
-//    students=ListView(children: listArray);
     cardDataList.sort((a,b){
       return b.title.compareTo(a.title);
     });

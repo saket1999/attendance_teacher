@@ -55,7 +55,7 @@ class AdminDashboard extends StatelessWidget{
               ),
               ListTile(
                 leading: Icon(Icons.email),
-                title: Text('Mail'),
+                title: Text('Mail',textScaleFactor: 1.1),
                 subtitle: Text('All teachers will be sent the email'),
                 onTap: (){
                   prefix0.Navigator.pop(context);
@@ -66,7 +66,7 @@ class AdminDashboard extends StatelessWidget{
               ),
               ListTile(
                 leading: Icon(Icons.search),
-                title: Text('Allow profile change'),
+                title: Text('Allow profile change',textScaleFactor: 1.1),
                 subtitle: Text('All selected users will be allowed to update their profile'),
                 onTap: (){
 
@@ -78,7 +78,7 @@ class AdminDashboard extends StatelessWidget{
               ),
               ListTile(
                 leading: Icon(Icons.subject),
-                title: Text('Attendance Short List'),
+                title: Text('Attendance Short List',textScaleFactor: 1.1),
                 subtitle: Text('See list of students with short attendance'),
                 onTap: (){
 
@@ -89,8 +89,8 @@ class AdminDashboard extends StatelessWidget{
                 },
               ),
               ListTile(
-                leading: Icon(Icons.subject),
-                title: Text('Sign Out'),
+                leading: Icon(Icons.exit_to_app),
+                title: Text('Sign Out',textScaleFactor: 1.1),
                 onTap: (){
                   clearSharedPrefs();
                   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Login(false)), (Route<dynamic> route) => false);
@@ -118,7 +118,7 @@ class AdminDashboard extends StatelessWidget{
   /*getUnverifiedTeachers returns a stream builder which creates a ListView with realtime updates. Stream is the Firestore reference to unverified teachers*/
   Widget getUnverifiedTeachers() {
     return StreamBuilder<QuerySnapshot> (
-      stream: Firestore.instance.collection('teach').where('verify', isEqualTo: 0).snapshots(),
+      stream: Firestore.instance.collection('teach').where('verify', isEqualTo: 0).orderBy('name').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if(!snapshot.hasData)
           return Center(child: Loading(indicator: BallPulseIndicator(), size: 30.0));
@@ -221,7 +221,7 @@ class AdminDashboard extends StatelessWidget{
   /*getUnverifiedStudents returns a stream builder which creates a ListView with realtime updates. Stream is the Firestore reference to unverified teachers*/
   Widget getUnverifiedStudents() {
     return StreamBuilder<QuerySnapshot> (
-      stream: Firestore.instance.collection('stud').where('verify', isEqualTo: 0).snapshots(),
+      stream: Firestore.instance.collection('stud').where('verify', isEqualTo: 0).orderBy('name').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if(!snapshot.hasData)
           return Center(child: Loading(indicator: BallPulseIndicator(), size: 30.0));
