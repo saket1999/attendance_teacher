@@ -87,11 +87,12 @@ class _MailClassState extends State<MailClass> {
                       Padding(
                         padding: EdgeInsets.all(10.0),
                         child: RaisedButton(
-                            child: (_sendingMail || _isLoading)?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Send Email'),
+                          color: Colors.black,
+                            child: (_sendingMail || _isLoading)?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Send Email', style: TextStyle(color: Colors.white)),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.0),
                             ),
-                            elevation: 40.0,
+                            elevation: 10.0,
                             onPressed: () {
                               if(_isLoading==true)
                                 toast('Please wait recipients are being fetched');

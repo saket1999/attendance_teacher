@@ -101,11 +101,12 @@ class _CreateClassState extends State<CreateClass> {
 							Padding(
 								padding: EdgeInsets.all(10.0),
 								child: RaisedButton(
-									child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Create'),
+									color: Colors.black,
+									child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Create', style: TextStyle(color: Colors.white)),
 									shape: RoundedRectangleBorder(
 										borderRadius: BorderRadius.circular(30.0),
 									),
-									elevation: 20.0,
+									elevation: 10.0,
 									onPressed: () {
 										if (_createForm.currentState.validate()) {
 											_createForm.currentState.save();

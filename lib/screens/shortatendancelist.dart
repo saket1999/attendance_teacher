@@ -51,11 +51,12 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
           bottom: PreferredSize(
             preferredSize: Size(100.0,40.0),
             child: RaisedButton(
-                child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Mail everyone'),
+              color: Colors.black,
+                child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Mail everyone', style: TextStyle(color: Colors.white)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0),
                 ),
-                elevation: 20.0,
+                elevation: 10.0,
                 onPressed: () {
                   sendMail();
                 }),

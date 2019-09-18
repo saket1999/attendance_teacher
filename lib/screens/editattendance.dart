@@ -106,6 +106,7 @@ class _EditAttendanceState extends State<EditAttendance> {
 									  ),
 									),
 									RaisedButton(
+										elevation: 10.0,
 										child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0):Text(
 											'Search',
 											style: TextStyle(color: Colors.white),

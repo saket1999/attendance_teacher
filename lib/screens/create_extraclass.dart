@@ -114,7 +114,12 @@ class _CreateExtraClassState extends State<CreateExtraClass> {
 												),
 											),
 											RaisedButton(
-												child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0,):Text('Submit'),
+												color: Colors.black,
+												shape: RoundedRectangleBorder(
+													borderRadius: BorderRadius.circular(30.0),
+												),
+												elevation: 10.0,
+												child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0,):Text('Submit', style: TextStyle(color: Colors.white)),
 												onPressed: () {
 													if(_createExtra.currentState.validate() && _isLoading == false) {
 														setState(() {

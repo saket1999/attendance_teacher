@@ -223,10 +223,12 @@ class _ProfileState extends State<Profile> {
 											),
 										),
 										_teacher.verify==1?Icon(Icons.block):RaisedButton(
-											child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Submit'),
+											child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Submit', style: TextStyle(color: Colors.white)),
 											shape: RoundedRectangleBorder(
 												borderRadius: BorderRadius.circular(30.0)
 											),
+											color: Colors.black,
+											elevation: 10.0,
 											onPressed: () {
 
 
