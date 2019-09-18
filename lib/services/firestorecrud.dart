@@ -72,10 +72,10 @@ class FirestoreCRUD{
 
 	static Future<bool> profileUpdate(Teacher teacher, File _image, bool newPassword) async {
 		if(newPassword) {
-			await Firestore.instance.collection('teach').document(teacher.documentId).updateData({'name': teacher.name, 'pass': teacher.pass, 'email': teacher.email, 'mobile': teacher.mobile});
+			await Firestore.instance.collection('teach').document(teacher.documentId).updateData({'name': teacher.name, 'pass': teacher.pass, 'email': teacher.email, 'mobile': teacher.mobile, 'verify': 0});
 		}
 		else
-			await Firestore.instance.collection('teach').document(teacher.documentId).updateData({'name': teacher.name, 'email': teacher.email, 'mobile': teacher.mobile});
+			await Firestore.instance.collection('teach').document(teacher.documentId).updateData({'name': teacher.name, 'email': teacher.email, 'mobile': teacher.mobile, 'verify': 0});
 
 		if(_image!=null)
 			await uploadPic(teacher, _image);

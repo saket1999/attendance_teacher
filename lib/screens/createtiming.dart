@@ -85,7 +85,6 @@ class _CreateTimingState extends State<CreateTiming> {
 											onChanged: (String newValue) {
 												setState(() {
 												  this._currentDaySelected = newValue;
-												  _timings.day = newValue;
 												});
 											},
 										)
@@ -166,6 +165,7 @@ class _CreateTimingState extends State<CreateTiming> {
 
 													_createForm.currentState.save();
 													_timings.start = _time;
+													_timings.day = _currentDaySelected;
 
 													FirestoreCRUD.createTime(_teaching, _timings ).then((bool b) {
 														if(b == true) {
