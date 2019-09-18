@@ -1,16 +1,22 @@
 # attendance_teacher
 
-A new Flutter application.
+The student side application to view realtime attendance in various subjects. The attendance_teacher app is available at this [link](https://github.com/harshwall/attendance_student)
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+- This source code requires connection to a Firestore database. Generate a database at [Firestore](https://console.firebase.google.com)
+- Create the database and download the 'google-services.json' file.
+- Place it in /android/app/
+- Edit the project name to 'com.example.attendance_student' in 'google-services.json'
+- You are good to go! :)
 
-A few resources to get you started if this is your first Flutter project:
+## Features
+- Teacher can create a new class
+- Teacher can edit profile
+- Teacher can view created classes in realtime
+- Teacher can take/update attendance in realtime
+- Teacher can generate a list of students falling short of attendance
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Contributors
+- [Harshit Agarwall](https://github.com/harshwall)
+- [Saket Kumar](https://github.com/saket1999)
