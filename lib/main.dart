@@ -69,12 +69,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return MaterialApp(
-      title: 'Teacher Attendance Manager',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.light
-      ),
-      home: check? (teacher.verify==404? AdminDashboard(): ShowCaseWidget(child: Dashboard(teacher, getHelp))): Login(getHelp)
+        title: 'Teacher Attendance Manager',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            fontFamily: 'Raleway',
+            brightness: Brightness.light
+        ),
+        home: check? (teacher.verify==404? AdminDashboard(): ShowCaseWidget(child: Dashboard(teacher, getHelp))): Login(getHelp)
     );
   }
 }

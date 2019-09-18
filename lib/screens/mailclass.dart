@@ -134,7 +134,6 @@ class _MailClassState extends State<MailClass> {
 
     for(int i=0;i<docs.documents.length;i++) {
       DocumentSnapshot studentDocs = await Firestore.instance.collection('stud').document(docs.documents[i].data['docId']).get();
-      print('----------------------------------'+studentDocs.data['email']);
       recipients.add(studentDocs.data['email'].toString());
     }
     setState(() {

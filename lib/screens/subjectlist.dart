@@ -133,7 +133,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 	//This stream builder fetches the timings of extra classes
 	Widget getExtraClassTimings() {
 		return StreamBuilder<QuerySnapshot> (
-			stream: Firestore.instance.collection('teach').document(_teaching.teacherDocumentId).collection('subject').document(_teaching.documentId).collection('extraClass').snapshots(),
+			stream: Firestore.instance.collection('teach').document(_teaching.teacherDocumentId).collection('subject').document(_teaching.documentId).collection('extraClass').orderBy("date", descending: true).snapshots(),
 			builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 				if (!snapshot.hasData)
 					return Center(child:Loading(indicator: BallPulseIndicator(), size: 20.0));
