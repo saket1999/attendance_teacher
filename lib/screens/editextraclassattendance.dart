@@ -1,3 +1,4 @@
+/*This screen allows teacher to edit attendance of an extra class*/
 import 'package:attendance_teacher/classes/student.dart';
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
@@ -34,7 +35,15 @@ class _EditExtraClassAttendanceState extends State<EditExtraClassAttendance> {
   bool _isLoading=false;
   var _editForm = GlobalKey<FormState>();
 
-
+/*UI Part:
+* AppBar:
+*   Text Edit Attendance
+* Body:
+*   Form:
+*     Enter Registration No.
+*     Search Button
+*   LisTile:
+*     Displays info about the particular student to mark present/absent*/
 
 
   @override
@@ -112,6 +121,8 @@ class _EditExtraClassAttendanceState extends State<EditExtraClassAttendance> {
   }
 
 
+  //This method searches for a particular student
+
   Future<void> searchStudentPresentAbsent() async {
     var student=await Firestore.instance.collection('stud').where('regNo',isEqualTo: regNo).getDocuments();
     if(student.documents.length==0){
@@ -140,6 +151,7 @@ class _EditExtraClassAttendanceState extends State<EditExtraClassAttendance> {
 
   }
 
+  //This method returns a card containing details of the student
   Widget simpleCard(Student student,String subjectId,String attendanceId){
     return Card(
       child: ExpansionTile(
@@ -198,6 +210,8 @@ class _EditExtraClassAttendanceState extends State<EditExtraClassAttendance> {
       ),
     );
   }
+
+  //This method refreshes the card
   void refreshSimpleCard(Student student){
     studentPresentAbsent=Card(
       child: ExpansionTile(

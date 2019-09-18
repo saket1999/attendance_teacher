@@ -1,3 +1,5 @@
+/*This screen is the Admin Dashboard. It contains two tabs to verify new accounts of Teacher and Students.*/
+
 import 'package:attendance_teacher/classes/student.dart';
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/screens/allowprofilechange.dart';
@@ -14,6 +16,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AdminDashboard extends StatelessWidget{
   const AdminDashboard({Key key}):super(key :key);
 
+
+  /*UI Part:
+  * Drawer:
+  *   Mail all teachers
+  *   Allow profile change
+  *   Attendance Short List
+  *   Sign Out
+  * Appbar:
+  *   Two tabs:
+  *      Teachers
+  *      Students
+  * Each Tab:
+  *   Multiple expansion tiles to verify new users*/
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +115,7 @@ class AdminDashboard extends StatelessWidget{
   }
 
 
-
+  /*getUnverifiedTeachers returns a stream builder which creates a ListView with realtime updates. Stream is the Firestore reference to unverified teachers*/
   Widget getUnverifiedTeachers() {
     return StreamBuilder<QuerySnapshot> (
       stream: Firestore.instance.collection('teach').where('verify', isEqualTo: 0).snapshots(),
@@ -112,6 +127,7 @@ class AdminDashboard extends StatelessWidget{
     );
   }
 
+  //getTeacherList creates a ListView of unverified teachers provided by the above stream builder.
   getTeacherList(AsyncSnapshot<QuerySnapshot> snapshot) {
     if(snapshot.data.documents.length==0)
       return Center(child: Icon(Icons.cloud,size: 64.0,color: Colors.teal));
@@ -201,6 +217,8 @@ class AdminDashboard extends StatelessWidget{
   }
 
 
+
+  /*getUnverifiedStudents returns a stream builder which creates a ListView with realtime updates. Stream is the Firestore reference to unverified teachers*/
   Widget getUnverifiedStudents() {
     return StreamBuilder<QuerySnapshot> (
       stream: Firestore.instance.collection('stud').where('verify', isEqualTo: 0).snapshots(),
@@ -212,6 +230,7 @@ class AdminDashboard extends StatelessWidget{
     );
   }
 
+  //getTeacherList creates a ListView of unverified students with their details provided by the above stream builder.
   getStudentList(AsyncSnapshot<QuerySnapshot> snapshot) {
     if(snapshot.data.documents.length==0)
       return Center(child: Icon(Icons.cloud,size: 64.0,color: Colors.teal));
@@ -325,6 +344,7 @@ class AdminDashboard extends StatelessWidget{
     return listView;
   }
 
+  //Shared preferences are cleared on sign out
   void clearSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('storedObject', '');

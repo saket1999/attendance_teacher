@@ -1,3 +1,5 @@
+/*This screen shows the list of timings available in a particular subject*/
+
 import 'package:attendance_teacher/classes/student.dart';
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
@@ -52,6 +54,20 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 		setState(() {});
 	}
 
+	/*UI:
+	* 	Two Tabs:
+	* 		Regular class
+	* 		Extra Class
+	* 	Each Tab has:
+	* 		Expansion tiles:
+	* 			Take attendance using swipe or qr method
+	* 			Bunk
+	* 			Edit attendance
+	* 			Cancel Class
+	* 	Floating action Buttons:
+	* 			Add regular class
+	* 			Add extra class*/
+
 	@override
   Widget build(BuildContext context) {
 
@@ -81,21 +97,6 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 				floatingActionButton: _bottomButtons(),
 			),
 		);
-
-//    return Scaffold(
-//		appBar: AppBar(
-//			title: Text('Timings'),
-//		),
-//		body: _isLoading ? Center(child: SpinKitRing(color: Colors.white)):getTimings(),
-//		floatingActionButton: FloatingActionButton(
-//			child: Icon(Icons.add),
-//			onPressed: _isLoading ? () {} : () {
-//				Navigator.push(context, MaterialPageRoute(builder: (context) {
-//					return CreateTiming(_teaching);
-//				}));
-//			},
-//		),
-//	);
   }
 
 	Widget regularClass() {
@@ -106,6 +107,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 		return _isLoading ? Center(child: SpinKitRing(color: Colors.black)):getExtraClassTimings();
 	}
 
+	//The floating buttons change action and icon when tabs are switched
 	Widget _bottomButtons() {
 		return _tabController.index == 0 ?
 		FloatingActionButton(
@@ -128,6 +130,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 		);
 	}
 
+	//This stream builder fetches the timings of extra classes
 	Widget getExtraClassTimings() {
 		return StreamBuilder<QuerySnapshot> (
 			stream: Firestore.instance.collection('teach').document(_teaching.teacherDocumentId).collection('subject').document(_teaching.documentId).collection('extraClass').snapshots(),
@@ -139,6 +142,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 		);
 	}
 
+	//This returns a list view according to the snapshots provided by the getExtraClassTimings stream builder
 	getExtraClassTimingsList(AsyncSnapshot<QuerySnapshot> snapshot) {
 		var listView = ListView.builder(itemCount: snapshot.data.documents.length, itemBuilder: (context, index) {
 			if(index < snapshot.data.documents.length) {
@@ -149,7 +153,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 						key: GlobalKey(),
 						title: ListTile(
 							title: Text(doc['date']),
-							subtitle: Text('Time: '+timeConverter(doc['start'])+'   Duration: '+doc['duration']+' hours'),
+							subtitle: Text('Time: '+timeConverter(doc['start'])+'  Duration: '+doc['duration']+' hours'),
 						),
 						children: <Widget>[
 							Card(
@@ -212,7 +216,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 		return listView;
 	}
 
-
+	//This stream builder fetches the timings of regular classes
 	Widget getTimings() {
   	return StreamBuilder<QuerySnapshot> (
 		stream: Firestore.instance.collection('teach').document(_teaching.teacherDocumentId).collection('subject').document(_teaching.documentId).collection('timings').snapshots(),
@@ -223,7 +227,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 		},
 	);
   }
-
+	//This returns a list view according to the snapshots provided by the getTimings stream builder
   getTimingsList(AsyncSnapshot<QuerySnapshot> snapshot) {
 		var listView = ListView.builder(itemCount:snapshot.data.documents.length,itemBuilder: (context, index) {
 			if(index<snapshot.data.documents.length) {
@@ -235,7 +239,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 					  key: GlobalKey(),
 				  	title: ListTile(
 						title: Text(timings.day),
-						subtitle: Text('Time: '+timeConverter(timings.start)+'   Duration: '+timings.duration+' hours'),
+						subtitle: Text('Time: '+timeConverter(timings.start)+'  Duration: '+timings.duration+' hours'),
 					),
 				  	children: <Widget>[
 				  		Card(
@@ -311,14 +315,19 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 		return listView;
   }
 
+  //This method marks each student of that class absent and send them a mail.
   void markAllAbsent(Timings timings) async {
 	  var now = DateTime.now();
 	  var date = now.year.toString()+'-'+now.month.toString()+'-'+now.day.toString();
 	  var time = timings.start;
+		List<String> recipients=[];
 
 	  Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(_teaching.documentId).collection('studentsEnrolled').getDocuments().then((snapshot) {
 		  for(int i=0; i<snapshot.documents.length; i++) {
+		  	//storing student docID in "var id"
 			  var id = snapshot.documents[i].data['docId'];
+				//adding email to recipient list
+			  recipients.add(snapshot.documents[i].data['email']);
 			  Firestore.instance.collection('stud').document(id).collection('subject').where('subjectId', isEqualTo: _teaching.subjectId).where('teacherId', isEqualTo: _teacher.teacherId).getDocuments().then((snapshot) {
 				  if(snapshot.documents.length>0) {
 					  Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').where('date', isEqualTo: date).where('time', isEqualTo: time).getDocuments().then((check) {
@@ -329,11 +338,16 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 				  }
 			  });
 		  }
-		  toast('Task Completed Successfully');
+		  toast('Sending email to all students');
 	  });
 
+	  //This code sends email to all students to notify bunk
+	  String subject='Mass Bunk in '+_teaching.subjectName;
+	  String body='All students have been marked absent for the below mentioned class\n\nSubject: '+_teaching.subjectName+'\nDate: '+date+'\nTime: '+time+'\n\nStricter actions will be taken if mass bunk is attempted in future.\n\nTeacher incharge '+_teacher.name;
+	  FirestoreCRUD.sendEmail(subject, body, recipients);
   }
 
+  //This method collects information about students to mark their attendance using the swipe method for a regular class
 	void getDataSwipePage(Timings timings) async {
 		List<Student> students = List<Student>();
 		List<String> url = List<String>();
@@ -357,6 +371,7 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 		});
 	}
 
+	//This method collects information about students to mark their attendance using the swipe method for an extra class
 	void getDataSwipePageWithDate(Timings timings, var doc) async {
 		List<Student> students = List<Student>();
 		List<String> url = List<String>();

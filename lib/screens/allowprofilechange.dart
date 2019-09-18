@@ -1,3 +1,4 @@
+/*This screen allows Admin to unlock the profile of a particular user for editing*/
 import 'package:attendance_teacher/classes/student.dart';
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +13,16 @@ class _AllowProfileChangeState extends State<AllowProfileChange> {
   var _profileChange = GlobalKey<FormState>();
   var uniqueId='';
   Widget teacherStudent=Container();
+
+  /*UI Part:
+  * AppBar:
+  *   Text: Allow profile change
+  * Body:
+  *   Form:
+  *      Unique ID:
+  *      Search Button
+  *   ListTile:
+  *       Displays data of the user with an option to unlock*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -5,7 +5,6 @@ import 'package:attendance_teacher/services/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
-import 'dart:math';
 
 class CreateClass extends StatefulWidget {
 
@@ -29,6 +28,15 @@ class _CreateClassState extends State<CreateClass> {
 	Teaching _subject = Teaching.blank();
 
 	bool _isLoading = false;
+
+	/*UI Part:
+	* Appbar:
+	* 	Text: Create Class
+	* Body: Form:
+	* 	Subject ID
+	* 	Subject Name
+	* 	Class ID
+	* 	Create Class Button*/
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +116,8 @@ class _CreateClassState extends State<CreateClass> {
 									),
 									elevation: 10.0,
 									onPressed: () {
+
+										//If validated class is created by the method FirestoreCRUD.createNewClass
 										if (_createForm.currentState.validate()) {
 											_createForm.currentState.save();
 											_subject.teacherDocumentId = _teacher.documentId;
@@ -135,17 +145,4 @@ class _CreateClassState extends State<CreateClass> {
 		),
 	);
   }
-
-
-
-	String RandomString(int strlen) {
-
-		const chars = "abcdefghijklmnopqrstuvwxyz";
-		Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);
-		String result = "";
-		for (var i = 0; i < strlen; i++) {
-			result += chars[rnd.nextInt(chars.length)];
-		}
-		return result;
-	}
 }

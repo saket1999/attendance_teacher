@@ -1,3 +1,5 @@
+/*This screen generates a ListView of subjects available in a particular class.*/
+
 import 'package:attendance_teacher/screens/studentavailable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,12 @@ class SubjectAvailable extends StatefulWidget {
 class _SubjectAvailableState extends State<SubjectAvailable> {
   String classId;
   String classDocId;
+
+  /*UI Part:
+  * Appbar:
+  *   Text: Subject in ClassId
+  * Body:
+  *   ListView of Subjects in that class*/
 
   _SubjectAvailableState(this.classId,this.classDocId);
   @override

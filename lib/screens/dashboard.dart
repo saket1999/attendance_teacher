@@ -1,3 +1,4 @@
+/*This screen shows the dashboard to the user after login*/
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/screens/createclass.dart';
@@ -35,6 +36,8 @@ class DashboardState extends State<Dashboard> {
 
   DashboardState(this._teacher, this.getHelp);
 
+  /*User profile is url is downloaded in the initState method*/
+
   void initState() {
     super.initState();
     getURL();
@@ -44,6 +47,29 @@ class DashboardState extends State<Dashboard> {
   GlobalKey _one = GlobalKey();
   GlobalKey _two = GlobalKey();
   GlobalKey _three = GlobalKey();
+
+  /*UI part of Dashboard
+    *
+    * Sliver app bar:
+    *   Profile Image
+    *   Teacher's Name
+    *   Teacher's Id
+    *
+    *
+    * Body:
+    *   List view of Subjects taught in various classes
+    *      Take attendance
+    *      Short attendance list
+    *      email class
+    *
+    *
+    * App Drawer:
+    *   Profile change
+    *   Sign out option
+    *
+    *
+    * Floating Action Button:
+    *   Create new class*/
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +187,7 @@ class DashboardState extends State<Dashboard> {
 
             ];
           },
-          body: getSubjects()
+          body: getSubjects()//Calls a stream builder of subjects
       ),
       floatingActionButton: Showcase(
         key: _one,
@@ -213,6 +239,8 @@ class DashboardState extends State<Dashboard> {
     );
   }
 
+  /*getSubjects returns a stream builder which creates a ListView with realtime updates. Stream is the Firestore reference to subjects of the teacher*/
+
   Widget getSubjects() {
     return StreamBuilder<QuerySnapshot> (
       stream: Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').snapshots(),
@@ -224,6 +252,8 @@ class DashboardState extends State<Dashboard> {
     );
   }
 
+  /*This creates a list view of subjects. Each subject is an expansion tile with multiple options*/
+
   getSubjectList(AsyncSnapshot<QuerySnapshot> snapshot) {
 
     var listView = ListView.builder(itemCount: snapshot.data.documents.length,itemBuilder: (context, index) {
@@ -232,26 +262,8 @@ class DashboardState extends State<Dashboard> {
         Teaching subject = Teaching.fromMapObject(doc);
         subject.documentId = doc.documentID;
         subject.teacherDocumentId = _teacher.documentId;
-//        return GestureDetector(
-//          onTap: () {
-//
-//            Navigator.push(context, MaterialPageRoute(builder: (context) {
-//              return SubjectList(_teacher, subject);
-//            }));
-////            Navigator.push(context, MaterialPageRoute(builder: (context) {
-////              return MailClass(subject,_teacher);
-////            }));
-//
-//          },
-//          child: Card(
-//            child: ListTile(
-//              title: Text(subject.subjectId),
-//              subtitle: Text(subject.subjectName),
-//            ),
-//          ),
-//        );
+
         return Card(
-//          color: Colors.black12,
           child: ExpansionTile(
               title: Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -313,6 +325,8 @@ class DashboardState extends State<Dashboard> {
     return listView;
   }
 
+  //Looks for profile image url in Firebase storage and sets it to the ui
+
   void getURL() async{
     String url;
     StorageReference ref = FirebaseStorage.instance.ref().child(_teacher.teacherId);
@@ -324,6 +338,8 @@ class DashboardState extends State<Dashboard> {
     });
 
   }
+
+  //Shared prefs wil be cleared on sign out
 
   void clearSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

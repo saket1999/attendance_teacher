@@ -1,3 +1,7 @@
+/*This screen shows the list of students whose attendance is less than then the goal(75%). The students are listed according to the attendance in a particular subject of a particular class.
+* The Admin can notify the students with email.*/
+
+import 'package:attendance_teacher/classes/card.dart';
 import 'package:attendance_teacher/classes/student.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +33,19 @@ class _StudentAvailableState extends State<StudentAvailable> {
   _StudentAvailableState(this.classId,this.subjectId,this.subjectName);
 
 
+
+  //shortAttendanceListGenerator is called before the activity is created
   void initState() {
     super.initState();
     shortAttendanceListGenerator();
   }
+
+  /*UI Part:
+  *   AppBar:
+  *     Text: Subject of ClassId
+  *     Button: Mail every student
+  *   Body:
+  *     ListView of Students with short attendance*/
 
   @override
   Widget build(BuildContext context) {
@@ -58,12 +71,15 @@ class _StudentAvailableState extends State<StudentAvailable> {
 
   }
 
+  //An async method to create a ListView of Students with short attendance
   Future<void> shortAttendanceListGenerator() async {
     setState(() {
       _isLoading=true;
     });
     students=ListView();
-    List<Widget> listArray=[];
+//    List<Widget> listArray=[];
+    List<CardData> cardDataList=[];
+    CardData cardData=CardData.blank();
     var studentDocuments=await Firestore.instance.collection('stud').where('classId',isEqualTo: classId).getDocuments();
     for(int i=0;i<studentDocuments.documents.length;i++){
       Student student=Student.fromMapObject(studentDocuments.documents[i].data);
@@ -89,23 +105,35 @@ class _StudentAvailableState extends State<StudentAvailable> {
       print(percentage);
 
       if(percentage<75.0){
-        listArray.add(Card(
-          child: ListTile(
-            title: Text(student.name),
-            subtitle: Text(student.regNo),
-            trailing: Text(percentage.toInt().toString()+' %'),
-          ),
-        ));
+        cardData=CardData(student.name,student.regNo,percentage.toInt().toString()+'%');
+        cardDataList.add(cardData);
+//        listArray.add(Card(
+//          child: ListTile(
+//            title: Text(student.name),
+//            subtitle: Text(student.regNo),
+//            trailing: Text(percentage.toInt().toString()+'%'),
+//          ),
+//        ));
         recipients.add(student.email);
       }
-
     }
-
-    students=ListView(children: listArray);
-
+//    students=ListView(children: listArray);
+    cardDataList.sort((a,b){
+      return b.title.compareTo(a.title);
+    });
+    students=ListView.builder(itemCount: cardDataList.length,itemBuilder: (context,index){
+      return Card(
+        child: ListTile(
+          title: Text(cardDataList[index].title),
+          subtitle: Text(cardDataList[index].subtitle),
+          trailing: Text(cardDataList[index].trailing),
+        ),
+      );
+    });
     setState(() {_isLoading=false;});
   }
 
+  //This method sends an email to all the listed students
   Future<void> sendMail() async {
     setState(() {
       _isLoading=true;

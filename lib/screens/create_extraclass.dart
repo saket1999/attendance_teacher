@@ -1,3 +1,5 @@
+/*This screen helps to schedule an extra class*/
+
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/classes/timings.dart';
 import 'package:attendance_teacher/services/firestorecrud.dart';
@@ -31,6 +33,11 @@ class _CreateExtraClassState extends State<CreateExtraClass> {
 	String date;
 
 	var _createExtra = GlobalKey<FormState>();
+
+	/*UI Part:
+	* 	AppBar:
+	* 		Text: Add Extra Class
+	* 	Body: Form:*/
 
 	@override
 	Widget build(BuildContext context) {

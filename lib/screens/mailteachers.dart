@@ -1,3 +1,4 @@
+/*This screen allows Admin to mail all teachers regarding any updates*/
 import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +21,19 @@ class _MailTeachersState extends State<MailTeachers> {
 
   _MailTeachersState();
 
+  //getRecipients is an async function which collects the email id of all teachers
   void initState() {
     super.initState();
     getRecipients();
   }
 
+  /*UI part:
+  * AppBar:
+  *    Text: Send Mail
+  * Body: Form:
+  *   TextFormField: Subject
+  *   TextFormField: Body
+  *   Send Button*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +96,7 @@ class _MailTeachersState extends State<MailTeachers> {
                                 toast('Please wait recipients are being fetched');
                               else{
                                 _mailForm.currentState.save();
-                                func();
+                                sendEmail();
                               }
                             }),
                       ),
@@ -101,7 +110,8 @@ class _MailTeachersState extends State<MailTeachers> {
       );
   }
 
-  Future<void> func() async {
+  //This method sends email to the recipients fetched
+  Future<void> sendEmail() async {
     setState(() {
       _sendingMail=true;
     });
@@ -116,6 +126,8 @@ class _MailTeachersState extends State<MailTeachers> {
     });
     return;
   }
+
+  //This method gets all Recipients async
   Future<void> getRecipients() async {
     QuerySnapshot docs=await Firestore.instance.collection('teach').getDocuments();
     var teacherCount=docs.documents.length-1;//One reduced because admin data is also saved as a teacher
