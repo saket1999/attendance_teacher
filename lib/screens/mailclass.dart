@@ -40,14 +40,7 @@ class _MailClassState extends State<MailClass> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: (){
-              Navigator.of(context).pop();
-            },
-          ),
           title: Text('Send Mail'),
-          backgroundColor: Colors.cyan,
         ),
         body: ListView(
           children: <Widget>[

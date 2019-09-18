@@ -97,9 +97,7 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
       var subject=await Firestore.instance.collection('stud').document(studentDocId).collection('subject').where('subjectId',isEqualTo: _teaching.subjectId).where('subjectName',isEqualTo: _teaching.subjectName).where('teacherId',isEqualTo: _teacher.teacherId).getDocuments();
       if(subject.documents.length==0)
         continue;
-
       var subjectDocData=subject.documents[0].data;
-
       int present=int.parse(subjectDocData['present']);
       int absent=int.parse(subjectDocData['absent']);
       if(present<0)

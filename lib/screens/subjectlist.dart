@@ -14,6 +14,7 @@ import 'package:attendance_teacher/services/firestorecrud.dart';
 import 'package:attendance_teacher/services/functions.dart';
 import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as prefix0;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -321,30 +322,28 @@ class _SubjectListState extends State<SubjectList> with SingleTickerProviderStat
 	  var date = now.year.toString()+'-'+now.month.toString()+'-'+now.day.toString();
 	  var time = timings.start;
 		List<String> recipients=[];
+		
+		toast('Please Wait');
 
-	  Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(_teaching.documentId).collection('studentsEnrolled').getDocuments().then((snapshot) {
-		  for(int i=0; i<snapshot.documents.length; i++) {
-		  	//storing student docID in "var id"
-			  var id = snapshot.documents[i].data['docId'];
-				//adding email to recipient list
-			  recipients.add(snapshot.documents[i].data['email']);
-			  Firestore.instance.collection('stud').document(id).collection('subject').where('subjectId', isEqualTo: _teaching.subjectId).where('teacherId', isEqualTo: _teacher.teacherId).getDocuments().then((snapshot) {
-				  if(snapshot.documents.length>0) {
-					  Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').where('date', isEqualTo: date).where('time', isEqualTo: time).getDocuments().then((check) {
-						  if(check.documents.length==0)
-							  Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot.documents[0].documentID).collection('attendance').add({'date': date, 'time': time, 'outcome': 'A', 'duration': timings.duration});
-					  });
-
-				  }
-			  });
-		  }
-		  toast('Sending email to all students');
-	  });
-
-	  //This code sends email to all students to notify bunk
-	  String subject='Mass Bunk in '+_teaching.subjectName;
-	  String body='All students have been marked absent for the below mentioned class\n\nSubject: '+_teaching.subjectName+'\nDate: '+date+'\nTime: '+time+'\n\nStricter actions will be taken if mass bunk is attempted in future.\n\nTeacher incharge '+_teacher.name;
-	  FirestoreCRUD.sendEmail(subject, body, recipients);
+	  QuerySnapshot snapshot = await Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(_teaching.documentId).collection('studentsEnrolled').getDocuments();
+		for(int i=0; i<snapshot.documents.length; i++) {
+			//storing student docID in "var id"
+			var id = snapshot.documents[i].data['docId'];
+			//adding email to recipient list
+			var emailSnapshot = await Firestore.instance.collection('stud').document(id).get();
+			recipients.add(emailSnapshot.data['email']);
+			var snapshot2 = await Firestore.instance.collection('stud').document(id).collection('subject').where('subjectId', isEqualTo: _teaching.subjectId).where('teacherId', isEqualTo: _teacher.teacherId).getDocuments();
+			if(snapshot2.documents.length>0) {
+				var check = await Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot2.documents[0].documentID).collection('attendance').where('date', isEqualTo: date).where('time', isEqualTo: time).where('duration',isEqualTo: timings.duration).getDocuments();
+				if(check.documents.length==0)
+					Firestore.instance.collection('stud').document(id).collection('subject').document(snapshot2.documents[0].documentID).collection('attendance').add({'date': date, 'time': time, 'outcome': 'A', 'duration': timings.duration});
+			}
+		}
+		toast('Sending email to all students');
+		//This code sends email to all students to notify bunk
+		String subject='Mass Bunk in '+_teaching.subjectName;
+		String body='All students have been marked absent for the below mentioned class\n\nSubject: '+_teaching.subjectName+'\nDate: '+date+'\nTime: '+time+'\n\nStricter actions will be taken if mass bunk is attempted in future.\n\nTeacher incharge '+_teacher.name;
+		FirestoreCRUD.sendEmail(subject, body, recipients);
   }
 
   //This method collects information about students to mark their attendance using the swipe method for a regular class
