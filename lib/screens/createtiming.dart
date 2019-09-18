@@ -1,3 +1,4 @@
+/*This screen helps in creating a particular timing of a particular regular class*/
 import 'dart:math';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/classes/timings.dart';
@@ -38,6 +39,15 @@ class _CreateTimingState extends State<CreateTiming> {
 		super.initState();
 		_currentDaySelected = dayList[0];
 	}
+
+	/*UI Part:
+	* Appbar:
+	* 	Text: Add Timings
+	* Body:
+	* 	Select Day
+	* 	Select Time
+	* 	Enter Duration
+	* 	Submit Button*/
 
 	@override
   Widget build(BuildContext context) {
@@ -180,17 +190,4 @@ class _CreateTimingState extends State<CreateTiming> {
 		),
 	);
   }
-
-//  Future<Null> selectTime(BuildContext context) async {
-//		final TimeOfDay picked = await showTimePicker(
-//			context: context,
-//			initialTime: _time
-//		);
-//		setState(() {
-//			if(picked!=null) {
-//				_time = picked;
-//				_timings.start = _time.toString();
-//			}
-//		});
-//  }
 }

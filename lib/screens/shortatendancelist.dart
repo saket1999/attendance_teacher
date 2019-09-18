@@ -1,3 +1,4 @@
+import 'package:attendance_teacher/classes/card.dart';
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
 import 'package:attendance_teacher/services/toast.dart';
@@ -70,6 +71,8 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
     });
     shortAttendanceList=ListView();
     List<Widget> listArray=[];
+    List<CardData> cardDataList=[];
+    CardData cardData=CardData.blank();
     var studentDocumentIds=await Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(_teaching.documentId).collection('studentsEnrolled').getDocuments();
     print(studentDocumentIds.documents.length);
     for(int i=0;i<studentDocumentIds.documents.length;i++){
@@ -98,6 +101,8 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
       print(subjectDocData);
       print(percentage);
       if(percentage<75) {
+        cardData=CardData(student.data['name'],student.data['regNo'],'Allow at '+percentage.toInt().toString()+'%');
+        cardDataList.add(cardData);
         bool b=true;
         listArray.add(Card(
           child: ListTile(
@@ -124,9 +129,37 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
         ));
         recipients.add(student.data['email']);
       }
-      setState(() {});
     }
-    shortAttendanceList=ListView(children: listArray);
+//    shortAttendanceList=ListView(children: listArray);
+    cardDataList.sort((a,b){
+      return b.title.compareTo(a.title);
+    });
+    shortAttendanceList=ListView.builder(itemCount: cardDataList.length,itemBuilder: (context,index){
+      bool b=true;
+      return Card(
+        child: ListTile(
+          title: Text(cardDataList[index].title),
+          subtitle: Text(cardDataList[index].subtitle),
+          trailing: RaisedButton(
+            child: Text(cardDataList[index].trailing),
+            onPressed: (){
+              if(b) {
+                toast('Allowed '+cardDataList[index].title);
+                Firestore.instance.collection('allow').add({
+                  'regNo': cardDataList[index].subtitle,
+                  'teacherId': _teacher.teacherId,
+                  'subjectId': _teaching.subjectId
+                });
+                b=false;
+              }
+              else
+                toast('Already allowed '+cardDataList[index].title);
+              setState(() {});
+            },
+          ),
+        ),
+      );
+    });
     _isLoading=false;
     setState(() {});
   }

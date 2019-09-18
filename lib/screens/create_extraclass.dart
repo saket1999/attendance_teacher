@@ -33,7 +33,7 @@ class _CreateExtraClassState extends State<CreateExtraClass> {
 	String date;
 
 	var _createExtra = GlobalKey<FormState>();
-	
+
 	/*UI Part:
 	* 	AppBar:
 	* 		Text: Add Extra Class

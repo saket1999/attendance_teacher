@@ -1,7 +1,8 @@
+/*Login page for the user. This page requires Id and password to login*/
+
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/screens/signup.dart';
 import 'package:attendance_teacher/services/firestorecrud.dart';
-import 'package:attendance_teacher/services/password.dart';
 import 'package:flutter/material.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
@@ -27,6 +28,16 @@ class _LoginState extends State<Login> {
   bool _isLoading=false;
 
 
+  /*UI part of the login page.
+* Appbar;
+*     Text:Login
+* Body:
+*     TextField: ID
+*     TextField: Password
+*
+*     Button: Login
+*     Button: Sign Up*/
+
   @override
   Widget build(BuildContext context) {
 
@@ -50,6 +61,7 @@ class _LoginState extends State<Login> {
                     validator: (String value) {
                       if (value.length != 8)
                         return "Incorrect Teacher's ID";
+                      return null;
                     },
                     decoration: InputDecoration(
                         labelText: "Teacher's ID",
@@ -68,6 +80,7 @@ class _LoginState extends State<Login> {
                     validator: (String value) {
                       if (value.length < 6)
                         return 'Password too short';
+                      return null;
                     },
                     decoration: InputDecoration(
                         labelText: 'Password',
@@ -86,13 +99,18 @@ class _LoginState extends State<Login> {
                       ),
                       elevation: 10.0,
                       onPressed: () {
+
+                        /*Form is validated
+                      * loading=true
+                      * Login is attempted
+                      * if login fails isLoading=false otherwise user is routed to Dashboard*/
+
                         if (_loginForm.currentState.validate()) {
                           _loginForm.currentState.save();
                           setState(() {
                             _isLoading=true;
                           });
                           FirestoreCRUD.login(context, teacher, inputPass, getHelp).then((bool value){
-                            print("See b is printed here  "+value.toString());
                             setState(() {
                               _isLoading=value;
                             });
