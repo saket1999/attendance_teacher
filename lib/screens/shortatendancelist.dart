@@ -1,6 +1,7 @@
 import 'package:attendance_teacher/classes/card.dart';
 import 'package:attendance_teacher/classes/teacher.dart';
 import 'package:attendance_teacher/classes/teaching.dart';
+import 'package:attendance_teacher/services/exportpdf.dart';
 import 'package:attendance_teacher/services/toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
   bool _isLoading=false;
   ListView shortAttendanceList=ListView();
   List<String> recipients=[];
+  List<CardData> cardDataList=[];
 
 
   _SubjectShortAttendancelistState(this._teacher, this._teaching);
@@ -50,16 +52,31 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
           title: Text('Short Attendance List'),
           bottom: PreferredSize(
             preferredSize: Size(100.0,40.0),
-            child: RaisedButton(
-              color: Colors.black,
-                child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Mail everyone', style: TextStyle(color: Colors.white)),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                elevation: 10.0,
-                onPressed: () {
-                  sendMail();
-                }),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                RaisedButton(
+                    color: Colors.black,
+                    child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Mail everyone', style: TextStyle(color: Colors.white)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    elevation: 10.0,
+                    onPressed: () {
+                      sendMail();
+                    }),
+                RaisedButton(
+                    color: Colors.green,
+                    child: _isLoading?Loading(indicator: BallPulseIndicator(), size: 20.0):Text('Export to Pdf', style: TextStyle(color: Colors.white)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    elevation: 10.0,
+                    onPressed: () {
+                      exportToPdf(_teacher,_teaching,cardDataList);
+                    }),
+              ],
+            ),
           ),
         ),
         body: shortAttendanceList,
@@ -71,8 +88,6 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
       _isLoading=true;
     });
     shortAttendanceList=ListView();
-    List<Widget> listArray=[];
-    List<CardData> cardDataList=[];
     CardData cardData=CardData.blank();
     var studentDocumentIds=await Firestore.instance.collection('teach').document(_teacher.documentId).collection('subject').document(_teaching.documentId).collection('studentsEnrolled').getDocuments();
     print(studentDocumentIds.documents.length);
@@ -117,7 +132,11 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
           title: Text(cardDataList[index].title),
           subtitle: Text(cardDataList[index].subtitle),
           trailing: RaisedButton(
-            child: Text(cardDataList[index].trailing),
+            child: Text(cardDataList[index].trailing,style: TextStyle(color: Colors.white),),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+            color: Colors.blue,
             onPressed: (){
               if(b) {
                 toast('Allowed '+cardDataList[index].title);
@@ -158,4 +177,6 @@ class _SubjectShortAttendancelistState extends State<SubjectShortAttendancelist>
     });
     return;
   }
+
+
 }
