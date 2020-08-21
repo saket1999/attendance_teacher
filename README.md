@@ -1,4 +1,4 @@
-# attendance_teacher
+# Teacher based attendance management app
 
 The student based application to view realtime attendance in various subjects. The attendance_teacher app is available at this [link](https://github.com/harshwall/attendance_student)
 
